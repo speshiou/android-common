@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/android-common.iml" filepath="$PROJECT_DIR$/android-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../bbforum-android/app/app.iml" filepath="$PROJECT_DIR$/../bbforum-android/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../bbforum-android/bbforum-android.iml" filepath="$PROJECT_DIR$/../bbforum-android/bbforum-android.iml" />
       <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
     </modules>
   </component>
