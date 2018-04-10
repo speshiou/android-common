@@ -19,8 +19,7 @@ abstract class EnhancedRecyclerAdapter<T> : RecyclerView.Adapter<RecyclerView.Vi
         onItemClickListener?.invoke(view, view.tag as T)
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
-        val holder = holder ?: return
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         holder.itemView.tag = mData[position]
         holder.itemView.setOnClickListener(mOnClickListener)
     }
