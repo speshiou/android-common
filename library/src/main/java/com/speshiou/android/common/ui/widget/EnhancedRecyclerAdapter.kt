@@ -24,6 +24,9 @@ abstract class EnhancedRecyclerAdapter<T> : RecyclerView.Adapter<RecyclerView.Vi
 
     var onLoadMoreListener: ((data: Bundle?) -> Unit)? = null
 
+    private var mRecyclerView: RecyclerView? = null
+    var emptyView: View? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if (viewType == VIEW_TYPE_LOAD_MORE) {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.list_item_more, parent, false)

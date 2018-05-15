@@ -1,5 +1,7 @@
 package com.speshiou.android.common.ui
 
+import android.content.Intent
+import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 
@@ -15,5 +17,30 @@ open class BaseActivity: AppCompatActivity() {
             }
             else -> return super.onOptionsItemSelected(item)
         }
+    }
+
+    fun launchImagePicker(requestCode: Int, prompt: String) {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.type = "image/*"
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+        startActivityForResult(Intent.createChooser(intent, prompt), requestCode)
+    }
+
+    fun handleImagePickerResult(data: Intent?): Array<Uri> {
+        val uri = data?.data
+        var uris = arrayListOf<Uri>()
+        if (uri == null) {
+            val clipData = data?.clipData
+            if (clipData != null) {
+                for (i in 0 until clipData.itemCount) {
+                    val item = clipData.getItemAt(i)
+                    val uri = item.uri
+                    uris.add(uri)
+                }
+            }
+        } else {
+            uris.add(uri)
+        }
+        return uris.toTypedArray()
     }
 }
