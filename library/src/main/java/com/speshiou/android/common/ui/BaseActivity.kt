@@ -1,9 +1,11 @@
 package com.speshiou.android.common.ui
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import android.view.inputmethod.InputMethodManager
 
 /**
  * Created by joey on 2018/1/11.
@@ -42,5 +44,13 @@ open class BaseActivity: AppCompatActivity() {
             uris.add(uri)
         }
         return uris.toTypedArray()
+    }
+
+    fun hideSoftInput() {
+        val view = currentFocus
+        if (view != null) {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            imm?.hideSoftInputFromWindow(view.windowToken, 0)
+        }
     }
 }
