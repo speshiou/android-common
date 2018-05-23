@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.speshiou.android.common.R
 import java.util.*
+import kotlin.properties.Delegates
 
 /**
  * Created by joey on 2017/12/27.
@@ -17,8 +18,27 @@ abstract class EnhancedRecyclerAdapter<T> : RecyclerView.Adapter<RecyclerView.Vi
     private var mHasMoreData = false
     private var mLoadMoreBundle: Bundle? = null
     protected var mData = ArrayList<T>()
+    var selectedItem: Int by Delegates.observable(-1) {
+        property, oldValue, newValue ->
+        if (oldValue in 0..(itemCount - 1)) {
+            notifyItemChanged(oldValue)
+        }
+        if (newValue in 0..(itemCount - 1)) {
+            notifyItemChanged(newValue)
+        }
+    }
+
+    var selectedItemData: T? = null
+        get() {
+            if (selectedItem in 0..(itemCount - 1)) {
+                return mData[selectedItem]
+            }
+            return null
+        }
+
     var onItemClickListener: ((view: View, obj: T) -> Unit)? = null
     protected val mOnClickListener = View.OnClickListener { view ->
+        selectedItem = mData.indexOf(view.tag)
         onItemClickListener?.invoke(view, view.tag as T)
     }
 
@@ -45,6 +65,7 @@ abstract class EnhancedRecyclerAdapter<T> : RecyclerView.Adapter<RecyclerView.Vi
                 onLoadMoreListener?.invoke(mLoadMoreBundle)
             }
         } else {
+            holder.itemView.isSelected = position == selectedItem
             holder.itemView.tag = mData[position]
             holder.itemView.setOnClickListener(mOnClickListener)
             onBindDataViewHolder(holder, position)
@@ -66,6 +87,7 @@ abstract class EnhancedRecyclerAdapter<T> : RecyclerView.Adapter<RecyclerView.Vi
 
     open fun updateData(data: Array<T>, hasMoreData: Boolean, loadMoreBundle: Bundle?) {
         mData.clear()
+        selectedItem = -1
         addData(data, hasMoreData, loadMoreBundle)
     }
 
