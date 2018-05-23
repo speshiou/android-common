@@ -1,6 +1,6 @@
 package com.speshiou.android.common.ui.ads;
 
-class AdType {
+public class AdType {
     public static final int AD_FB_NATIVE = 101;
     public static final int AD_DFP = 102;
     public static final int AD_ADMOB_NATIVE_ADV = 103;
