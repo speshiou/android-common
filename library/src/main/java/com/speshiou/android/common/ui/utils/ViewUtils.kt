@@ -8,9 +8,9 @@ import android.widget.TextView
 
 class ViewUtils() {
     companion object {
-        fun tintMenuItem(context: Context, menuItem: MenuItem, color: Int) {
+        fun tintMenuItem(menuItem: MenuItem, color: Int) {
             val drawable = DrawableCompat.wrap(menuItem.icon)
-            DrawableCompat.setTint(drawable, ContextCompat.getColor(context, android.R.color.white))
+            DrawableCompat.setTint(drawable, color)
             menuItem.icon = drawable
         }
 
