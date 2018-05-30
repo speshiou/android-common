@@ -2,4 +2,5 @@
 <resources>
     <string name="app_name_dummy">Android Common</string>
     <string name="ad">廣告</string>
+    <string name="remove_ad">移除廣告</string>
 </resources>

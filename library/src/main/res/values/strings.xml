@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name_dummy">Android Common</string>
     <string name="ad">Ad</string>
+    <string name="remove_ad">Remove Ad</string>
 </resources>

@@ -5,9 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.NativeExpressAdView;
 import com.speshiou.android.common.R;
 
 import java.util.ArrayList;
@@ -32,6 +30,8 @@ public class AdViewRecycler {
     private int mNativeAdLayoutResId = R.layout.ad_s;
     private int mInstallAdLayoutResId = R.layout.ad_install;
     private int mContentAdLayoutResId = R.layout.ad_content;
+
+    public View.OnClickListener onClickRemoveAdButtonListener;
 
     public AdViewRecycler(Context context) {
         mContext = context;
@@ -166,6 +166,9 @@ public class AdViewRecycler {
             AdViewHolder viewHolder = (AdViewHolder) adView.getTag();
             if (viewHolder != null) {
                 viewHolder.resetViews();
+                if (viewHolder.buttonRemoveAd != null) {
+                    viewHolder.buttonRemoveAd.setOnClickListener(onClickRemoveAdButtonListener);
+                }
             }
         }
         return adView;

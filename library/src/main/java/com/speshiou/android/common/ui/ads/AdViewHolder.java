@@ -21,6 +21,7 @@ public class AdViewHolder extends RecyclerView.ViewHolder {
     public TextView textViewCaption;
     public TextView textViewBody;
     public TextView buttonAction;
+    public TextView buttonRemoveAd;
     public RatingBar ratingBar;
     public ImageView imageViewIcon;
     public ViewGroup adContainer;
@@ -36,6 +37,7 @@ public class AdViewHolder extends RecyclerView.ViewHolder {
         ratingBar = (RatingBar) itemView.findViewById(R.id.rating);
         imageViewIcon = (ImageView) itemView.findViewById(R.id.icon);
         buttonAction = (TextView) itemView.findViewById(R.id.button_action);
+        buttonRemoveAd = itemView.findViewById(R.id.button_remove_ad);
         adContainer = (ViewGroup) itemView.findViewById(R.id.ad_container);
         adChoicePlaceHolder = (ViewGroup) itemView.findViewById(R.id.adchoice_placeholder);
         resetViews();
