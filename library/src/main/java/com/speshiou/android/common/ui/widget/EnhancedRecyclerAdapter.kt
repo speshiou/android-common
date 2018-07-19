@@ -18,6 +18,9 @@ abstract class EnhancedRecyclerAdapter<T> : RecyclerView.Adapter<RecyclerView.Vi
     private var mHasMoreData = false
     private var mLoadMoreBundle: Bundle? = null
     protected var mData = ArrayList<T>()
+
+    var selectionEnabled = true
+
     var selectedItem: Int by Delegates.observable(-1) {
         property, oldValue, newValue ->
         if (oldValue in 0..(itemCount - 1)) {
@@ -67,7 +70,9 @@ abstract class EnhancedRecyclerAdapter<T> : RecyclerView.Adapter<RecyclerView.Vi
         } else {
             holder.itemView.isSelected = position == selectedItem
             holder.itemView.tag = mData[position]
-            holder.itemView.setOnClickListener(mOnClickListener)
+            if (selectionEnabled) {
+                holder.itemView.setOnClickListener(mOnClickListener)
+            }
             onBindDataViewHolder(holder, position)
         }
     }
