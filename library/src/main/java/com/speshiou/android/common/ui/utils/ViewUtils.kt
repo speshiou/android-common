@@ -1,6 +1,7 @@
 package com.speshiou.android.common.ui.utils
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
 import android.support.v4.graphics.drawable.DrawableCompat
 import android.view.MenuItem
@@ -9,9 +10,13 @@ import android.widget.TextView
 class ViewUtils() {
     companion object {
         fun tintMenuItem(menuItem: MenuItem, color: Int) {
-            val drawable = DrawableCompat.wrap(menuItem.icon)
+            menuItem.icon = tintDrawable(menuItem.icon, color)
+        }
+
+        fun tintDrawable(drawable: Drawable, color: Int): Drawable {
+            val drawable = DrawableCompat.wrap(drawable).mutate()
             DrawableCompat.setTint(drawable, color)
-            menuItem.icon = drawable
+            return drawable
         }
 
         fun applyCompoundDrawableSize(textView: TextView, size: Int) {
