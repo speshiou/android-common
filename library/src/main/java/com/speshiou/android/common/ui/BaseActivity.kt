@@ -2,10 +2,20 @@ package com.speshiou.android.common.ui
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Rect
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
+import android.opengl.ETC1.getHeight
+import android.util.TypedValue
+import android.os.Build
+import android.view.View
+import android.view.ViewTreeObserver
+import android.view.ViewGroup
+import com.speshiou.android.common.ui.widget.OnKeyboardVisibilityListener
+
+
 
 /**
  * Created by joey on 2018/1/11.
@@ -52,5 +62,29 @@ open class BaseActivity: AppCompatActivity() {
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             imm?.hideSoftInputFromWindow(view.windowToken, 0)
         }
+    }
+
+    fun setKeyboardVisibilityListener(onKeyboardVisibilityListener: OnKeyboardVisibilityListener) {
+        val parentView = (findViewById<View>(android.R.id.content) as ViewGroup).getChildAt(0)
+        parentView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+
+            private var alreadyOpen: Boolean = false
+            private val defaultKeyboardHeightDP = 100
+            private val EstimatedKeyboardDP = defaultKeyboardHeightDP + if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) 48 else 0
+            private val rect = Rect()
+
+            override fun onGlobalLayout() {
+                val estimatedKeyboardHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, EstimatedKeyboardDP.toFloat(), parentView.resources.displayMetrics).toInt()
+                parentView.getWindowVisibleDisplayFrame(rect)
+                val heightDiff = parentView.rootView.height - (rect.bottom - rect.top)
+                val isShown = heightDiff >= estimatedKeyboardHeight
+
+                if (isShown == alreadyOpen) {
+                    return
+                }
+                alreadyOpen = isShown
+                onKeyboardVisibilityListener.onKeyboardVisibilityChanged(isShown)
+            }
+        })
     }
 }
