@@ -48,7 +48,34 @@ abstract class EnhancedRecyclerAdapter<T> : RecyclerView.Adapter<RecyclerView.Vi
     var onLoadMoreListener: ((data: Bundle?) -> Unit)? = null
 
     private var mRecyclerView: RecyclerView? = null
-    var emptyView: View? = null
+    var emptyView by Delegates.observable<View?>(null) {
+        property, oldValue, newValue ->
+
+        if (newValue != null) {
+            registerAdapterDataObserver(object: RecyclerView.AdapterDataObserver() {
+                override fun onChanged() {
+                    super.onChanged()
+                    if (itemCount > 0) {
+                        newValue?.visibility = View.GONE
+                        mRecyclerView?.visibility = View.VISIBLE
+                    } else {
+                        mRecyclerView?.visibility = View.GONE
+                        newValue?.visibility = View.VISIBLE
+                    }
+                }
+            })
+        }
+    }
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        mRecyclerView = recyclerView
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        mRecyclerView = null
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if (viewType == VIEW_TYPE_LOAD_MORE) {
