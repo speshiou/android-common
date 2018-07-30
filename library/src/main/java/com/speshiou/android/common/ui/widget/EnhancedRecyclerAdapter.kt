@@ -41,7 +41,9 @@ abstract class EnhancedRecyclerAdapter<T> : RecyclerView.Adapter<RecyclerView.Vi
 
     var onItemClickListener: ((view: View, obj: T) -> Unit)? = null
     protected val mOnClickListener = View.OnClickListener { view ->
-        selectedItem = mData.indexOf(view.tag)
+        if (selectionEnabled) {
+            selectedItem = mData.indexOf(view.tag)
+        }
         onItemClickListener?.invoke(view, view.tag as T)
     }
 
@@ -97,9 +99,7 @@ abstract class EnhancedRecyclerAdapter<T> : RecyclerView.Adapter<RecyclerView.Vi
         } else {
             holder.itemView.isSelected = position == selectedItem
             holder.itemView.tag = mData[position]
-            if (selectionEnabled) {
-                holder.itemView.setOnClickListener(mOnClickListener)
-            }
+            holder.itemView.setOnClickListener(mOnClickListener)
             onBindDataViewHolder(holder, position)
         }
     }
