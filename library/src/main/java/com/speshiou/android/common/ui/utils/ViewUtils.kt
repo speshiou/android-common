@@ -19,6 +19,14 @@ class ViewUtils() {
             return drawable
         }
 
+        fun tintCompoundDrawable(textView: TextView, color: Int) {
+            for (drawable in textView.compoundDrawables) {
+                if (drawable != null) {
+                    DrawableCompat.setTint(drawable, color)
+                }
+            }
+        }
+
         fun applyCompoundDrawableSize(textView: TextView, size: Int) {
             for (drawable in textView.compoundDrawables) {
                 if (drawable != null) {
