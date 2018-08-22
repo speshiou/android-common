@@ -22,5 +22,12 @@
             style="@style/TextAppearance.AppCompat.Title"
             android:textColor="@color/secondary_text_default_material_light"
             android:layout_marginTop="@dimen/margin_l"/>
+        <Button
+            android:id="@+id/action_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_l"
+            style="@style/Widget.AppCompat.Button.Colored"/>
     </LinearLayout>
 </merge>
