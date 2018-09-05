@@ -15,9 +15,10 @@ import kotlin.properties.Delegates
  */
 abstract class EnhancedRecyclerAdapter<T> : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    protected var mData = ArrayList<T>()
     private var mHasMoreData = false
     private var mLoadMoreBundle: Bundle? = null
-    protected var mData = ArrayList<T>()
+    private var mLoadingMore = false
 
     var selectionEnabled = true
 
@@ -93,14 +94,24 @@ abstract class EnhancedRecyclerAdapter<T> : RecyclerView.Adapter<RecyclerView.Vi
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val viewType = getItemViewType(position)
         if (viewType == VIEW_TYPE_LOAD_MORE) {
-            holder.itemView.post {
-                onLoadMoreListener?.invoke(mLoadMoreBundle)
+            if (mHasMoreData && !mLoadingMore) {
+                mLoadingMore = true
+                holder.itemView.post {
+                    onLoadMoreListener?.invoke(mLoadMoreBundle)
+                }
             }
         } else {
             holder.itemView.isSelected = position == selectedItem
             holder.itemView.tag = mData[position]
             holder.itemView.setOnClickListener(mOnClickListener)
             onBindDataViewHolder(holder, position)
+
+            if (mHasMoreData && !mLoadingMore && itemCount - position < PRELOAD_MORE_AHEAD) {
+                mLoadingMore = true
+                holder.itemView.post {
+                    onLoadMoreListener?.invoke(mLoadMoreBundle)
+                }
+            }
         }
     }
 
@@ -112,6 +123,7 @@ abstract class EnhancedRecyclerAdapter<T> : RecyclerView.Adapter<RecyclerView.Vi
 
     open fun addData(data: Array<T>, hasMoreData: Boolean, loadMoreBundle: Bundle?) {
         mHasMoreData = hasMoreData
+        mLoadingMore = false
         mLoadMoreBundle = loadMoreBundle
         mData.addAll(Arrays.asList(*data))
         notifyDataSetChanged()
@@ -138,5 +150,6 @@ abstract class EnhancedRecyclerAdapter<T> : RecyclerView.Adapter<RecyclerView.Vi
     companion object {
         const val VIEW_TYPE_LOAD_MORE = -1
         const val VIEW_TYPE_DATA = -2
+        const val PRELOAD_MORE_AHEAD = 30
     }
 }
