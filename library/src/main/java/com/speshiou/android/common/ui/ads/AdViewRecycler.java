@@ -30,6 +30,7 @@ public class AdViewRecycler {
     private int mNativeAdLayoutResId = R.layout.ad_s;
     private int mInstallAdLayoutResId = R.layout.ad_install;
     private int mContentAdLayoutResId = R.layout.ad_content;
+    int fbNativeAdLayoutResId = R.layout.ad_fb_native;
 
     public View.OnClickListener onClickRemoveAdButtonListener;
 
@@ -153,6 +154,9 @@ public class AdViewRecycler {
                     break;
                 case AdViewType.AD_CONTENT:
                     layoutId = mContentAdLayoutResId;
+                    break;
+                case AdViewType.AD_FB_NATIVE:
+                    layoutId = fbNativeAdLayoutResId;
                     break;
             }
             if (layoutId != -1) {

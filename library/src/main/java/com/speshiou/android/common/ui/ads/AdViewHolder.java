@@ -15,7 +15,7 @@ import com.speshiou.android.common.R;
 
 public class AdViewHolder extends RecyclerView.ViewHolder {
 
-    public View viewAdTag;
+    public TextView viewAdTag;
     public TextView textViewTitle;
     public TextView textViewSubtitle;
     public TextView textViewCaption;

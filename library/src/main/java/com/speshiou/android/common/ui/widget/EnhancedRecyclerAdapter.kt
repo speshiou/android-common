@@ -121,6 +121,10 @@ abstract class EnhancedRecyclerAdapter<T> : RecyclerView.Adapter<RecyclerView.Vi
         return mData.size + if (mHasMoreData) 1 else 0
     }
 
+    open fun indexOfData(obj: T): Int {
+        return mData.indexOf(obj)
+    }
+
     open fun addData(data: Array<T>, hasMoreData: Boolean, loadMoreBundle: Bundle?) {
         mHasMoreData = hasMoreData
         mLoadingMore = false

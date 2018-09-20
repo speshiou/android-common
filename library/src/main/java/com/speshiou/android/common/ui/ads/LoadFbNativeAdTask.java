@@ -8,8 +8,11 @@ import android.view.ViewGroup;
 import com.facebook.ads.Ad;
 import com.facebook.ads.AdChoicesView;
 import com.facebook.ads.AdError;
+import com.facebook.ads.AdIconView;
 import com.facebook.ads.AdListener;
+import com.facebook.ads.MediaView;
 import com.facebook.ads.NativeAd;
+import com.facebook.ads.NativeAdListener;
 import com.speshiou.android.common.R;
 
 import java.util.ArrayList;
@@ -31,7 +34,12 @@ public class LoadFbNativeAdTask extends LoadAdTask {
     protected void onLoad() {
         super.onLoad();
         NativeAd nativeAd = new NativeAd(mContext, mUnitId);
-        nativeAd.setAdListener(new AdListener() {
+        nativeAd.setAdListener(new NativeAdListener() {
+
+            @Override
+            public void onMediaDownloaded(Ad ad) {
+
+            }
 
             @Override
             public void onError(Ad ad, AdError error) {
@@ -91,29 +99,21 @@ public class LoadFbNativeAdTask extends LoadAdTask {
 
         mNativeAd.unregisterView();
 
-        View adView = mAdViewRecycler.obtainAdView(mContext, AdViewType.AD_NATIVE, mUnitId);
+        View adView = mAdViewRecycler.obtainAdView(mContext, AdViewType.AD_FB_NATIVE, mUnitId);
         AdViewHolder viewHolder = (AdViewHolder) adView.getTag();
 
         viewHolder.viewAdTag.setVisibility(View.VISIBLE);
+        AdIconView nativeAdIcon = adView.findViewById(R.id.native_ad_icon);
+        MediaView nativeAdMedia = adView.findViewById(R.id.native_ad_media);
         // Set the Text.
-        viewHolder.textViewTitle.setText(mNativeAd.getAdTitle());
+        viewHolder.viewAdTag.setText(mNativeAd.getSponsoredTranslation());
+        viewHolder.textViewTitle.setText(mNativeAd.getAdvertiserName());
         viewHolder.textViewSubtitle.setVisibility(TextUtils.isEmpty(mNativeAd.getAdSocialContext()) ? View.GONE : View.VISIBLE);
         viewHolder.textViewSubtitle.setText(mNativeAd.getAdSocialContext());
-        viewHolder.textViewBody.setVisibility(TextUtils.isEmpty(mNativeAd.getAdBody()) ? View.GONE : View.VISIBLE);
-//        viewHolder.textViewBody.setText(mNativeAd.getAdBody());
-        viewHolder.textViewBody.setText("");
-        viewHolder.buttonAction.setVisibility(TextUtils.isEmpty(mNativeAd.getAdCallToAction()) ? View.GONE : View.VISIBLE);
+        viewHolder.textViewBody.setVisibility(TextUtils.isEmpty(mNativeAd.getAdBodyText()) ? View.GONE : View.VISIBLE);
+        viewHolder.textViewBody.setText(mNativeAd.getAdBodyText());
+        viewHolder.buttonAction.setVisibility(mNativeAd.hasCallToAction() ? View.VISIBLE : View.GONE);
         viewHolder.buttonAction.setText(mNativeAd.getAdCallToAction());
-
-        // Download and display the ad icon.
-        NativeAd.Image adIcon = mNativeAd.getAdIcon();
-        if (adIcon != null) {
-            viewHolder.imageViewIcon.setVisibility(View.VISIBLE);
-            NativeAd.downloadAndDisplayImage(adIcon, viewHolder.imageViewIcon);
-        }
-
-        // Download and display the cover image.
-//                nativeAdMedia.setNativeAd(nativeAd);
 
         // Add the AdChoices icon
         AdChoicesView adChoicesView = new AdChoicesView(mContext, mNativeAd, true);
@@ -124,7 +124,7 @@ public class LoadFbNativeAdTask extends LoadAdTask {
         List<View> clickableViews = new ArrayList<>();
         clickableViews.add(adContainer);
         clickableViews.add(viewHolder.buttonAction);
-        mNativeAd.registerViewForInteraction(adContainer, clickableViews);
+        mNativeAd.registerViewForInteraction(adContainer, nativeAdMedia, nativeAdIcon, clickableViews);
 
         if (adView.getParent() != null && adView.getParent() instanceof ViewGroup) {
             ((ViewGroup) adView.getParent()).removeView(adView);
