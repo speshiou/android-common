@@ -117,6 +117,13 @@ abstract class EnhancedRecyclerAdapter<T> : RecyclerView.Adapter<RecyclerView.Vi
 
     abstract fun onBindDataViewHolder(holder: RecyclerView.ViewHolder, position: Int)
 
+    fun getItem(position: Int): T? {
+        if (position < mData.size) {
+            return mData[position]
+        }
+        return null
+    }
+
     override fun getItemCount(): Int {
         return mData.size + if (mHasMoreData) 1 else 0
     }
