@@ -17,8 +17,8 @@ public class LoadDfpBannerTask extends LoadAdTask {
     private PublisherAdView mPublisherAdView;
     private AdSize[] mBannerAdSizes;
 
-    public LoadDfpBannerTask(Context context, AdViewRecycler adViewRecycler, String unitId, AdSize[] adSizes) {
-        super(context, adViewRecycler, unitId);
+    public LoadDfpBannerTask(Context context, AdViewRecycler adViewRecycler, String adType, String unitId, AdSize[] adSizes) {
+        super(context, adViewRecycler, adType, unitId);
         mBannerAdSizes = adSizes;
     }
 

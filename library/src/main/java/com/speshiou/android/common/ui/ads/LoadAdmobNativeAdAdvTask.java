@@ -23,8 +23,8 @@ public class LoadAdmobNativeAdAdvTask extends LoadAdTask {
     private NativeAppInstallAd mNativeAppInstallAd;
     private NativeContentAd mNativeContentAd;
 
-    public LoadAdmobNativeAdAdvTask(Context context, AdViewRecycler adViewRecycler, String unitId) {
-        super(context, adViewRecycler, unitId);
+    public LoadAdmobNativeAdAdvTask(Context context, AdViewRecycler adViewRecycler, String adType, String unitId) {
+        super(context, adViewRecycler, adType, unitId);
     }
 
     private void clearAds() {

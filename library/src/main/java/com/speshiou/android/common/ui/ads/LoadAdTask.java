@@ -37,11 +37,13 @@ public class LoadAdTask implements Runnable {
     private boolean mFailedInLoadingAd = false;
     private boolean mInitialized = false;
     private long mLoadedTime;
+    String adType;
 
-    public LoadAdTask(Context context, AdViewRecycler adViewRecycler, String unitId) {
+    public LoadAdTask(Context context, AdViewRecycler adViewRecycler, String adType, String unitId) {
         mContext = context;
         mAdViewRecycler = adViewRecycler;
         mUnitId = unitId;
+        this.adType = adType;
     }
 
     @Override

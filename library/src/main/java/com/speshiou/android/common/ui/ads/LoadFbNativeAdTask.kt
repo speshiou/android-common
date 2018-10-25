@@ -8,13 +8,13 @@ import com.facebook.ads.*
 import com.speshiou.android.common.R
 import java.util.ArrayList
 
-class LoadFbNativeAdTask(context: Context, adViewRecycler: AdViewRecycler, private val adType: String, unitId: String) : LoadAdTask(context, adViewRecycler, unitId) {
+class LoadFbNativeAdTask(context: Context, adViewRecycler: AdViewRecycler, fbAdType: String, unitId: String) : LoadAdTask(context, adViewRecycler, fbAdType, unitId) {
 
     private var mNativeAd: NativeAdBase? = null
 
     override fun onLoad() {
         super.onLoad()
-        val nativeAd: NativeAdBase = when (adType) {
+        val nativeAd: NativeAdBase = when (this.adType) {
             AdType.AD_FB_NATIVE -> NativeAd(mContext, mUnitId)
             else -> NativeBannerAd(mContext, mUnitId)
         }

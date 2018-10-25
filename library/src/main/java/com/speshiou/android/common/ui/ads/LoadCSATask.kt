@@ -15,7 +15,7 @@ import com.speshiou.android.common.ui.ads.LoadAdTask
 /**
  * Created by joey on 2018/1/10.
  */
-class LoadCSATask(context: Context, adViewRecycler: AdViewRecycler, unitId: String, var keyword: String?) : LoadAdTask(context, adViewRecycler, unitId) {
+class LoadCSATask(context: Context, adViewRecycler: AdViewRecycler, adType: String, unitId: String, var keyword: String?) : LoadAdTask(context, adViewRecycler, adType, unitId) {
 
     private var mSearchAdView: SearchAdView? = null
     private var mAdViewContainer: View? = null
