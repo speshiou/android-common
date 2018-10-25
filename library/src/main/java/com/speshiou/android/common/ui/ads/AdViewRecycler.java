@@ -21,7 +21,7 @@ public class AdViewRecycler {
 
     private HashMap<Integer, ArrayList<View>> mPool = new HashMap<>();
     private HashMap<String, LoadAdTask> mLoadAdTasks = new HashMap<>();
-    private HashMap<Integer, ArrayList<LoadAdTask>> mLoadAdTaskMap = new HashMap<>();
+    private HashMap<String, ArrayList<LoadAdTask>> mLoadAdTaskMap = new HashMap<>();
 //    private HashMap<ViewGroup, LoadAdTask> mLoadAdTaskMap = new HashMap<>();
 
     private AdSize[] mBannerAdSizes = new AdSize[] { AdSize.LARGE_BANNER };
@@ -31,6 +31,7 @@ public class AdViewRecycler {
     private int mInstallAdLayoutResId = R.layout.ad_install;
     private int mContentAdLayoutResId = R.layout.ad_content;
     int fbNativeAdLayoutResId = R.layout.ad_fb_native;
+    int fbNativeBannerAdLayoutResId = R.layout.ad_fb_native_banner;
 
     public View.OnClickListener onClickRemoveAdButtonListener;
 
@@ -62,16 +63,16 @@ public class AdViewRecycler {
         mContentAdLayoutResId = layoutResId;
     }
 
-    public LoadAdTask createLoadAdTask(int adType, String unitId) {
+    public LoadAdTask createLoadAdTask(String adType, String unitId) {
         LoadAdTask task = null;
         if (adType == AdType.AD_FB_NATIVE) {
-            task = new LoadFbNativeAdTask(mContext, this, unitId);
-        } else if (adType == AdType.AD_DFP) {
+            task = new LoadFbNativeAdTask(mContext, this, adType, unitId);
+        } else if (adType == AdType.AD_FB_NATIVE_BANNER) {
+            task = new LoadFbNativeAdTask(mContext, this, adType, unitId);
+        } else if (adType == AdType.AD_DFP_NATIVE) {
             task = new LoadDfpAdTask(mContext, this, unitId, mBannerAdSizes);
-        } else if (adType == AdType.AD_ADMOB_NATIVE_ADV) {
+        } else if (adType == AdType.AD_ADMOB_NATIVE) {
             task = new LoadAdmobNativeAdAdvTask(mContext, this, unitId);
-        } else if (adType == AdType.AD_ADMOB_NATIVE_EXP) {
-            task = new LoadAdmobNativeAdExpTask(mContext, this, unitId, mBannerExpAdSize);
         } else if (adType == AdType.AD_DFP_BANNER) {
             task = new LoadDfpBannerTask(mContext, this, unitId, mBannerAdSizes);
         } else if (adType == AdType.AD_CSA) {
@@ -80,7 +81,7 @@ public class AdViewRecycler {
         return task;
     }
 
-    public LoadAdTask obtainAdTask(int adType, String unitId, int refreshRate) {
+    public LoadAdTask obtainAdTask(String adType, String unitId, int refreshRate) {
         ArrayList<LoadAdTask> tasks = mLoadAdTaskMap.get(adType);
         if (tasks == null) {
             tasks = new ArrayList<>();
@@ -105,7 +106,7 @@ public class AdViewRecycler {
         return reusedTask;
     }
 
-    public void recycleAdTask(int adType, LoadAdTask task) {
+    public void recycleAdTask(String adType, LoadAdTask task) {
         ArrayList<LoadAdTask> tasks = mLoadAdTaskMap.get(adType);
         if (tasks == null) {
             tasks = new ArrayList<>();
@@ -114,7 +115,7 @@ public class AdViewRecycler {
         tasks.add(task);
     }
 
-    public void loadAd(ViewGroup adContainer, int adType, String unitId) {
+    public void loadAd(ViewGroup adContainer, String adType, String unitId) {
         LoadAdTask task = mLoadAdTasks.get(unitId);
         if (task == null) {
             task = createLoadAdTask(adType, unitId);
@@ -157,6 +158,9 @@ public class AdViewRecycler {
                     break;
                 case AdViewType.AD_FB_NATIVE:
                     layoutId = fbNativeAdLayoutResId;
+                    break;
+                case AdViewType.AD_FB_NATIVE_BANNER:
+                    layoutId = fbNativeBannerAdLayoutResId;
                     break;
             }
             if (layoutId != -1) {

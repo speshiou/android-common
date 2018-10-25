@@ -64,7 +64,7 @@ public class AdViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    public void loadAd(AdViewRecycler adViewRecycler, int adType, String unitId) {
+    public void loadAd(AdViewRecycler adViewRecycler, String adType, String unitId) {
         adContainer.removeAllViews();
         adViewRecycler.loadAd(adContainer, adType, unitId);
     }
