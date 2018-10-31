@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.speshiou.android.common.R
+import com.speshiou.android.common.ui.ads.LoadAdTask
 import java.util.*
 import kotlin.properties.Delegates
 
@@ -112,6 +113,23 @@ abstract class EnhancedRecyclerAdapter<T> : RecyclerView.Adapter<RecyclerView.Vi
                     onLoadMoreListener?.invoke(mLoadMoreBundle)
                 }
             }
+
+            val adPreloadStart = when {
+                position < PRELOAD_AD_AHEAD -> {
+                    position + 1
+                }
+                else -> {
+                    position + PRELOAD_AD_AHEAD - 1
+                }
+            }
+            for (adPos in adPreloadStart until position + PRELOAD_AD_AHEAD) {
+                if (adPos >= 0 && adPos < mData.size) {
+                    val obj = mData[adPos]
+                    if (obj is LoadAdTask) {
+                        obj.run()
+                    }
+                }
+            }
         }
     }
 
@@ -162,5 +180,6 @@ abstract class EnhancedRecyclerAdapter<T> : RecyclerView.Adapter<RecyclerView.Vi
         const val VIEW_TYPE_LOAD_MORE = -1
         const val VIEW_TYPE_DATA = -2
         const val PRELOAD_MORE_AHEAD = 30
+        const val PRELOAD_AD_AHEAD = 10
     }
 }
