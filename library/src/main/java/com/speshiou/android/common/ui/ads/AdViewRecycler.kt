@@ -22,8 +22,8 @@ class AdViewRecycler(private val mContext: Context) {
     private var mNativeAdLayoutResId = R.layout.ad_s
     private var mInstallAdLayoutResId = R.layout.ad_install
     private var mContentAdLayoutResId = R.layout.ad_content
-    internal var fbNativeAdLayoutResId = R.layout.ad_fb_native
-    internal var fbNativeBannerAdLayoutResId = R.layout.ad_fb_native_banner
+    var fbNativeAdLayoutResId = R.layout.ad_fb_native
+    var fbNativeBannerAdLayoutResId = R.layout.ad_fb_native_banner
 
     var onClickRemoveAdButtonListener: View.OnClickListener? = null
 
