@@ -22,6 +22,7 @@ class AdViewRecycler(private val mContext: Context) {
     private var mNativeAdLayoutResId = R.layout.ad_s
     private var mInstallAdLayoutResId = R.layout.ad_install
     private var mContentAdLayoutResId = R.layout.ad_content
+    private var mAdmobUnifiedAdLayoutResId = R.layout.admob_ad_unified
     var fbNativeAdLayoutResId = R.layout.ad_fb_native
     var fbNativeBannerAdLayoutResId = R.layout.ad_fb_native_banner
 
@@ -56,7 +57,7 @@ class AdViewRecycler(private val mContext: Context) {
         } else if (adType == AdType.AD_DFP_NATIVE) {
             task = LoadDfpAdTask(mContext, this, adType, unitId, mBannerAdSizes)
         } else if (adType == AdType.AD_ADMOB_NATIVE) {
-            task = LoadAdmobNativeAdAdvTask(mContext, this, adType, unitId)
+            task = LoadAdmobNativeAdUnifiedTask(mContext, this, adType, unitId)
         } else if (adType == AdType.AD_DFP_BANNER) {
             task = LoadDfpBannerTask(mContext, this, adType, unitId, mBannerAdSizes)
         } else if (adType == AdType.AD_CSA) {
@@ -136,6 +137,7 @@ class AdViewRecycler(private val mContext: Context) {
                 AdViewType.AD_CONTENT -> layoutId = mContentAdLayoutResId
                 AdViewType.AD_FB_NATIVE -> layoutId = fbNativeAdLayoutResId
                 AdViewType.AD_FB_NATIVE_BANNER -> layoutId = fbNativeBannerAdLayoutResId
+                AdViewType.AD_ADMOB_UNIFIED -> layoutId = mAdmobUnifiedAdLayoutResId
             }
             if (layoutId != -1) {
                 adView = LayoutInflater.from(context).inflate(layoutId, null, false)

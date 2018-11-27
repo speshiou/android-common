@@ -7,5 +7,6 @@ class AdViewType {
         const val AD_CONTENT = 3
         const val AD_FB_NATIVE = 4
         const val AD_FB_NATIVE_BANNER = 5
+        const val AD_ADMOB_UNIFIED = 6
     }
 }
