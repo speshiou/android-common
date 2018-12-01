@@ -114,13 +114,13 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
         //                adView.setMediaView(mediaView);
 
         // Some assets are guaranteed to be in every NativeAppInstallAd.
-        val title = unifiedNativeAd.headline as String
+        val title = unifiedNativeAd.headline
         (adView.headlineView as TextView).text = title
         //        ((TextView) adView.getBodyView()).setText(nativeAppInstallAd.getBody());
         (adView.bodyView as TextView).text = ""
         (adView.callToActionView as Button).text = unifiedNativeAd.callToAction
         (adView.iconView as ImageView).setImageDrawable(
-                unifiedNativeAd.icon.drawable)
+                unifiedNativeAd.icon?.drawable)
 
         // Apps can check the VideoController's hasVideoContent property to determine if the
         // NativeAppInstallAd has a video asset.
@@ -135,7 +135,7 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
 
         // These assets aren't guaranteed to be in every NativeAppInstallAd, so it's important to
         // check before trying to display them.
-        val price = unifiedNativeAd.price as String
+        val price = unifiedNativeAd.price
         if (price == null) {
             adView.priceView.visibility = View.INVISIBLE
         } else {
@@ -143,7 +143,7 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
             (adView.priceView as TextView).text = price
         }
 
-        val store = unifiedNativeAd.store as String
+        val store = unifiedNativeAd.store
         if (store == null) {
             adView.storeView.visibility = View.INVISIBLE
         } else {
@@ -171,7 +171,7 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
         val extras = unifiedNativeAd.extras
         if (extras != null) {
             if (extras.containsKey(FacebookAdapter.KEY_SUBTITLE_ASSET)) {
-                val text = extras.get(FacebookAdapter.KEY_SUBTITLE_ASSET) as String
+                val text = extras.getString(FacebookAdapter.KEY_SUBTITLE_ASSET)
                 if (title != text) {
                     (adView.bodyView as TextView).text = text
                 }

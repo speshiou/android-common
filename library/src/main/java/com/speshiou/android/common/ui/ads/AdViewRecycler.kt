@@ -18,11 +18,11 @@ class AdViewRecycler(private val mContext: Context) {
 
     private var mBannerAdSizes = arrayOf(AdSize.LARGE_BANNER)
     private var mBannerExpAdSize = AdSize.LARGE_BANNER
-    private var mKeyword: String? = null
+    var keyword: String? = null
     private var mNativeAdLayoutResId = R.layout.ad_s
     private var mInstallAdLayoutResId = R.layout.ad_install
     private var mContentAdLayoutResId = R.layout.ad_content
-    private var mAdmobUnifiedAdLayoutResId = R.layout.admob_ad_unified
+    var mAdmobUnifiedAdLayoutResId = R.layout.admob_ad_unified
     var fbNativeAdLayoutResId = R.layout.ad_fb_native
     var fbNativeBannerAdLayoutResId = R.layout.ad_fb_native_banner
 
@@ -30,10 +30,6 @@ class AdViewRecycler(private val mContext: Context) {
 
     fun setNativeExpAdSize(adSize: AdSize) {
         mBannerExpAdSize = adSize
-    }
-
-    fun setKeyword(keyword: String) {
-        mKeyword = keyword
     }
 
     fun setNativeAdLayoutResId(layoutResId: Int) {
@@ -61,12 +57,12 @@ class AdViewRecycler(private val mContext: Context) {
         } else if (adType == AdType.AD_DFP_BANNER) {
             task = LoadDfpBannerTask(mContext, this, adType, unitId, mBannerAdSizes)
         } else if (adType == AdType.AD_CSA) {
-            task = LoadCSATask(mContext, this, adType, unitId, mKeyword)
+            task = LoadCSATask(mContext, this, adType, unitId, keyword)
         }
         return task
     }
 
-    fun obtainAdTask(adType: String, unitId: String, refreshRate: Int): LoadAdTask {
+    fun obtainAdTask(adType: String, unitId: String, refreshRate: Int): LoadAdTask? {
         var tasks: ArrayList<LoadAdTask>? = mLoadAdTaskMap[adType]
         if (tasks == null) {
             tasks = ArrayList()
@@ -84,9 +80,9 @@ class AdViewRecycler(private val mContext: Context) {
         } else {
             tasks.remove(reusedTask)
         }
-        reusedTask!!.setRefreshRate(refreshRate)
+        reusedTask?.setRefreshRate(refreshRate)
         if (reusedTask is LoadCSATask) {
-            reusedTask.keyword = mKeyword
+            reusedTask.keyword = keyword
         }
         return reusedTask
     }
