@@ -114,8 +114,7 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
         // Some assets are guaranteed to be in every NativeAppInstallAd.
         val title = unifiedNativeAd.headline
         (adView.headlineView as TextView).text = title
-        //        ((TextView) adView.getBodyView()).setText(nativeAppInstallAd.getBody());
-        (adView.bodyView as TextView).text = ""
+        (adView.bodyView as? TextView)?.text = unifiedNativeAd.body
         (adView.callToActionView as Button).text = unifiedNativeAd.callToAction
         (adView.iconView as ImageView).setImageDrawable(
                 unifiedNativeAd.icon?.drawable)
@@ -171,7 +170,7 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
             if (extras.containsKey(FacebookAdapter.KEY_SUBTITLE_ASSET)) {
                 val text = extras.getString(FacebookAdapter.KEY_SUBTITLE_ASSET)
                 if (title != text) {
-                    (adView.bodyView as TextView).text = text
+                    (adView.bodyView as? TextView)?.text = text
                 }
             }
             //            if (extras.containsKey(FacebookAdapter.KEY_SOCIAL_CONTEXT_ASSET)) {
