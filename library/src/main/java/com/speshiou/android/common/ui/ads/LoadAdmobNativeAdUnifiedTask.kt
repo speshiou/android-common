@@ -107,11 +107,9 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
         adView.priceView = adView.findViewById(R.id.subtitle)
         adView.starRatingView = adView.findViewById(R.id.rating)
         adView.storeView = adView.findViewById(R.id.caption)
-
         // The MediaView will display a video asset if one is present in the ad, and the first image
         // asset otherwise.
-        //                MediaView mediaView = (MediaView) adView.findViewById(R.id.appinstall_media);
-        //                adView.setMediaView(mediaView);
+        adView.mediaView = adView.findViewById(R.id.media)
 
         // Some assets are guaranteed to be in every NativeAppInstallAd.
         val title = unifiedNativeAd.headline
@@ -137,18 +135,18 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
         // check before trying to display them.
         val price = unifiedNativeAd.price
         if (price == null) {
-            adView.priceView.visibility = View.INVISIBLE
+            adView.priceView?.visibility = View.INVISIBLE
         } else {
-            adView.priceView.visibility = View.VISIBLE
-            (adView.priceView as TextView).text = price
+            adView.priceView?.visibility = View.VISIBLE
+            (adView.priceView as? TextView)?.text = price
         }
 
         val store = unifiedNativeAd.store
         if (store == null) {
-            adView.storeView.visibility = View.INVISIBLE
+            adView.storeView?.visibility = View.INVISIBLE
         } else {
-            adView.storeView.visibility = View.VISIBLE
-            (adView.storeView as TextView).text = store
+            adView.storeView?.visibility = View.VISIBLE
+            (adView.storeView as? TextView)?.text = store
         }
 
         if (TextUtils.isEmpty(store) && TextUtils.isEmpty(price)) {
@@ -158,13 +156,13 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
         }
 
         if (unifiedNativeAd.starRating == null || unifiedNativeAd.starRating == 0.0) {
-            adView.starRatingView.visibility = View.GONE
+            adView.starRatingView?.visibility = View.GONE
         } else {
             if (unifiedNativeAd.starRating?.toFloat() == 0f) {
-                adView.starRatingView.visibility = View.GONE
+                adView.starRatingView?.visibility = View.GONE
             } else {
-                (adView.starRatingView as RatingBar).rating = unifiedNativeAd.starRating?.toFloat() ?: 0f
-                adView.starRatingView.visibility = View.VISIBLE
+                (adView.starRatingView as? RatingBar)?.rating = unifiedNativeAd.starRating?.toFloat() ?: 0f
+                adView.starRatingView?.visibility = View.VISIBLE
             }
         }
 

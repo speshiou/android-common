@@ -88,7 +88,7 @@ class LoadFbNativeAdTask(context: Context, adViewRecycler: AdViewRecycler, fbAdT
 
         viewHolder.viewAdTag.visibility = View.VISIBLE
         val nativeAdIcon = adView.findViewById<AdIconView>(R.id.native_ad_icon)
-        val nativeAdMedia = adView.findViewById<MediaView>(R.id.native_ad_media)
+        val nativeAdMedia = adView.findViewById<MediaView>(R.id.media)
         // Set the Text.
         viewHolder.viewAdTag.text = ad.sponsoredTranslation
         viewHolder.textViewTitle.text = ad.advertiserName

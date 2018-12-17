@@ -42,7 +42,7 @@ android:background="?android:attr/selectableItemBackground">
         </LinearLayout>
     </LinearLayout>
     <com.facebook.ads.MediaView
-        android:id="@+id/native_ad_media"
+        android:id="@+id/media"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
