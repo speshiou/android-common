@@ -44,7 +44,7 @@ class AdViewRecycler(private val mContext: Context) {
         mContentAdLayoutResId = layoutResId
     }
 
-    fun createLoadAdTask(adType: String, unitId: String): LoadAdTask? {
+    private fun createLoadAdTask(adType: String, unitId: String): LoadAdTask? {
         var task: LoadAdTask? = null
         if (adType == AdType.AD_FB_NATIVE) {
             task = LoadFbNativeAdTask(mContext, this, adType, unitId)
