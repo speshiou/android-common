@@ -11,6 +11,7 @@ import android.widget.TextView
 import com.google.ads.mediation.facebook.FacebookAdapter
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.doubleclick.PublisherAdRequest
 import com.google.android.gms.ads.formats.*
 import com.speshiou.android.common.R
 
@@ -30,11 +31,15 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
             return
         }
         if (adLoader != null) {
-            adLoader?.loadAd(AdRequest.Builder().build())
+            if (adType == AdType.AD_DFP_NATIVE) {
+                adLoader?.loadAd(PublisherAdRequest.Builder().build())
+            } else {
+                adLoader?.loadAd(AdRequest.Builder().build())
+            }
             return
         }
 
-        adLoader = AdLoader.Builder(mContext, mUnitId)
+        val loaderBuilder = AdLoader.Builder(mContext, mUnitId)
                 .forUnifiedNativeAd {
                     unifiedNativeAd ->
                     clearAds()
@@ -54,12 +59,19 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
                         // Methods in the NativeAdOptions.Builder class can be
                         // used here to specify individual options settings.
                         .build())
-                .build()
+        if (adType == AdType.AD_DFP_NATIVE) {
+            loaderBuilder.withPublisherAdViewOptions(PublisherAdViewOptions.Builder().build())
+        }
+        adLoader = loaderBuilder.build()
 
 
         // Request an ad
         //        adLoader.loadAd(new AdRequest.Builder().addTestDevice("33BE2250B43518CCDA7DE426D04EE232").build());
-        adLoader?.loadAd(AdRequest.Builder().build())
+        if (adType == AdType.AD_DFP_NATIVE) {
+            adLoader?.loadAd(PublisherAdRequest.Builder().build())
+        } else {
+            adLoader?.loadAd(AdRequest.Builder().build())
+        }
     }
 
     public override fun attachAdView(adContainer: ViewGroup) {

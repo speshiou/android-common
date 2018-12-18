@@ -5,12 +5,11 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.search.DynamicHeightSearchAdRequest
 import com.google.android.gms.ads.search.SearchAdView
 import com.speshiou.android.common.R
-import com.speshiou.android.common.ui.ads.AdViewRecycler
-import com.speshiou.android.common.ui.ads.LoadAdTask
 
 /**
  * Created by joey on 2018/1/10.
@@ -18,9 +17,6 @@ import com.speshiou.android.common.ui.ads.LoadAdTask
 class LoadCSATask(context: Context, adViewRecycler: AdViewRecycler, adType: String, unitId: String, var keyword: String?) : LoadAdTask(context, adViewRecycler, adType, unitId) {
 
     private var mSearchAdView: SearchAdView? = null
-    private var mAdViewContainer: View? = null
-
-    var adViewDecoratorResIs: Int = -1
 
     public override fun onLoad() {
         super.onLoad()
@@ -51,18 +47,9 @@ class LoadCSATask(context: Context, adViewRecycler: AdViewRecycler, adType: Stri
                 if (mSearchAdView != null) {
                     mSearchAdView?.destroy()
                 }
-                mAdViewContainer = if (adViewDecoratorResIs != -1) {
-                    LayoutInflater.from(searchAdView.context).inflate(adViewDecoratorResIs, null, false)
-                } else {
-                    null
-                }
 
                 mSearchAdView = searchAdView
-                val adViewContainer = mAdViewContainer
-                if (adViewContainer != null) {
-                    val vg: ViewGroup = adViewContainer.findViewById(R.id.ad_view_container)
-                    vg.addView(searchAdView)
-                }
+
                 onLoaded()
             }
         }
@@ -99,10 +86,21 @@ class LoadCSATask(context: Context, adViewRecycler: AdViewRecycler, adType: Stri
         if (mSearchAdView == null) {
             return
         }
-        val adView = if (mAdViewContainer == null) mSearchAdView else mAdViewContainer
-        if (adView?.parent != null && adView.parent is ViewGroup) {
-            (adView.parent as ViewGroup).removeView(adView)
+        val adView = mSearchAdView
+        if (adView != null) {
+            if (adView.parent != null && adView.parent is ViewGroup) {
+                (adView.parent as ViewGroup).removeView(adView)
+            }
+            adContainer.addView(adView)
+            var lp = mSearchAdView?.layoutParams
+            if (lp == null) {
+                lp = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT)
+            }
+            if (lp is ViewGroup.MarginLayoutParams) {
+                val offset = adView.context.resources.getDimensionPixelSize(R.dimen.csa_offset)
+                lp.setMargins(offset, 0, 0, 0)
+                adView.layoutParams = lp
+            }
         }
-        adContainer.addView(adView)
     }
 }
