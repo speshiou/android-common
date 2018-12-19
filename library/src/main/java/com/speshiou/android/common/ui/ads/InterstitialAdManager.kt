@@ -11,6 +11,8 @@ class InterstitialAdManager {
                     task = LoadFbInterstitialAdTask(context, unitId)
                 } else if (adType == InterstitialAdType.ADMOB) {
                     task = LoadAdMobInterstitialAdTask(context, unitId)
+                } else if (adType == InterstitialAdType.DFP) {
+                    task = LoadDfpInterstitialAdTask(context, unitId)
                 }
             }
             return task

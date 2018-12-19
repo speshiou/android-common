@@ -4,5 +4,6 @@ class InterstitialAdType {
     companion object {
         const val FB = "FB"
         const val ADMOB = "ADMOB"
+        const val DFP = "DFP"
     }
 }
