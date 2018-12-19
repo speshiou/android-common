@@ -112,20 +112,39 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
         //                    }
         //                });
 
-        adView.headlineView = adView.findViewById(R.id.title)
-        adView.bodyView = adView.findViewById(R.id.body)
-        adView.callToActionView = adView.findViewById(R.id.button_action)
-        adView.iconView = adView.findViewById(R.id.icon)
-        adView.priceView = adView.findViewById(R.id.subtitle)
+        val viewHolder = adView.tag as AdViewHolder
+        adView.headlineView = viewHolder.textViewTitle
+        adView.bodyView = viewHolder.textViewBody
+        adView.callToActionView = viewHolder.buttonAction
+        adView.iconView = viewHolder.imageViewIcon
+        adView.priceView = viewHolder.textViewSubtitle
         adView.starRatingView = adView.findViewById(R.id.rating)
         adView.storeView = adView.findViewById(R.id.caption)
         // The MediaView will display a video asset if one is present in the ad, and the first image
         // asset otherwise.
         adView.mediaView = adView.findViewById(R.id.media)
+        adView.mediaView?.setOnHierarchyChangeListener(object : ViewGroup.OnHierarchyChangeListener {
+            override fun onChildViewRemoved(parent: View?, child: View?) {
+
+            }
+
+            override fun onChildViewAdded(parent: View?, child: View?) {
+                if (child != null && child is ImageView) {
+                    child.adjustViewBounds = true
+                }
+            }
+
+        })
 
         // Some assets are guaranteed to be in every NativeAppInstallAd.
         val title = unifiedNativeAd.headline
-        (adView.headlineView as TextView).text = title
+        if (TextUtils.isEmpty(title)) {
+            adView.headlineView?.visibility = View.GONE
+        } else {
+            adView.headlineView?.visibility = View.VISIBLE
+            (adView.headlineView as TextView).text = title
+            adView.bodyView?.visibility = View.GONE
+        }
         (adView.bodyView as? TextView)?.text = unifiedNativeAd.body
         (adView.callToActionView as Button).text = unifiedNativeAd.callToAction
         (adView.iconView as ImageView).setImageDrawable(
@@ -144,33 +163,20 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
 
         // These assets aren't guaranteed to be in every NativeAppInstallAd, so it's important to
         // check before trying to display them.
-        val price = unifiedNativeAd.price
-        if (price == null) {
-            adView.priceView?.visibility = View.INVISIBLE
-        } else {
-            adView.priceView?.visibility = View.VISIBLE
-            (adView.priceView as? TextView)?.text = price
-        }
-
+        var price = unifiedNativeAd.price
         val store = unifiedNativeAd.store
         if (store == null) {
-            adView.storeView?.visibility = View.INVISIBLE
+//            adView.storeView?.visibility = View.INVISIBLE
         } else {
             adView.storeView?.visibility = View.VISIBLE
             (adView.storeView as? TextView)?.text = store
         }
 
-        if (TextUtils.isEmpty(store) && TextUtils.isEmpty(price)) {
-            adView.findViewById<View>(R.id.secondary_line).visibility = View.GONE
-        } else {
-            adView.findViewById<View>(R.id.secondary_line).visibility = View.VISIBLE
-        }
-
         if (unifiedNativeAd.starRating == null || unifiedNativeAd.starRating == 0.0) {
-            adView.starRatingView?.visibility = View.GONE
+//            adView.starRatingView?.visibility = View.GONE
         } else {
             if (unifiedNativeAd.starRating?.toFloat() == 0f) {
-                adView.starRatingView?.visibility = View.GONE
+//                adView.starRatingView?.visibility = View.GONE
             } else {
                 (adView.starRatingView as? RatingBar)?.rating = unifiedNativeAd.starRating?.toFloat() ?: 0f
                 adView.starRatingView?.visibility = View.VISIBLE
@@ -182,13 +188,26 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
             if (extras.containsKey(FacebookAdapter.KEY_SUBTITLE_ASSET)) {
                 val text = extras.getString(FacebookAdapter.KEY_SUBTITLE_ASSET)
                 if (title != text) {
+                    adView.bodyView?.visibility = View.VISIBLE
                     (adView.bodyView as? TextView)?.text = text
                 }
             }
-            //            if (extras.containsKey(FacebookAdapter.KEY_SOCIAL_CONTEXT_ASSET)) {
-            //                String text = (String) extras.get(FacebookAdapter.KEY_SOCIAL_CONTEXT_ASSET);
-            //                ((TextView) adView.getPriceView()).setText(text);
-            //            }
+            if (extras.containsKey(FacebookAdapter.KEY_SOCIAL_CONTEXT_ASSET)) {
+                price = extras.getString(FacebookAdapter.KEY_SOCIAL_CONTEXT_ASSET)
+            }
+        }
+
+        if (price == null) {
+//            adView.priceView?.visibility = View.INVISIBLE
+        } else {
+            adView.priceView?.visibility = View.VISIBLE
+            (adView.priceView as? TextView)?.text = price
+        }
+
+        if (TextUtils.isEmpty(store) && TextUtils.isEmpty(price)) {
+//            adView.findViewById<View>(R.id.secondary_line).visibility = View.GONE
+        } else {
+            adView.findViewById<View>(R.id.secondary_line).visibility = View.VISIBLE
         }
 
         // Assign native ad object to the native view.
