@@ -16,7 +16,7 @@ class AdViewRecycler(private val mContext: Context) {
     private val mLoadAdTaskMap = HashMap<String, ArrayList<LoadAdTask>>()
     //    private HashMap<ViewGroup, LoadAdTask> mLoadAdTaskMap = new HashMap<>();
 
-    private var mBannerAdSizes = arrayOf(AdSize.LARGE_BANNER)
+    var bannerAdSizes = arrayOf(AdSize.LARGE_BANNER)
     private var mBannerExpAdSize = AdSize.LARGE_BANNER
     var keyword: String? = null
     private var mNativeAdLayoutResId = R.layout.ad_s
@@ -50,12 +50,10 @@ class AdViewRecycler(private val mContext: Context) {
             task = LoadFbNativeAdTask(mContext, this, adType, unitId)
         } else if (adType == AdType.AD_FB_NATIVE_BANNER) {
             task = LoadFbNativeAdTask(mContext, this, adType, unitId)
-        } else if (adType == AdType.AD_DFP_NATIVE) {
-            task = LoadAdmobNativeAdUnifiedTask(mContext, this, adType, unitId)
+        } else if (adType == AdType.AD_DFP) {
+            task = LoadAdmobNativeAdUnifiedTask(mContext, this, adType, unitId, *bannerAdSizes)
         } else if (adType == AdType.AD_ADMOB_NATIVE) {
             task = LoadAdmobNativeAdUnifiedTask(mContext, this, adType, unitId)
-        } else if (adType == AdType.AD_DFP_BANNER) {
-            task = LoadDfpBannerTask(mContext, this, adType, unitId, mBannerAdSizes)
         } else if (adType == AdType.AD_CSA) {
             task = LoadCSATask(mContext, this, adType, unitId, keyword)
         }

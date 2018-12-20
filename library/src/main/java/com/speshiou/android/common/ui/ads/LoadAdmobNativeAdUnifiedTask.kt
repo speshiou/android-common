@@ -11,16 +11,21 @@ import android.widget.TextView
 import com.google.ads.mediation.facebook.FacebookAdapter
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest
+import com.google.android.gms.ads.doubleclick.PublisherAdView
 import com.google.android.gms.ads.formats.*
 import com.speshiou.android.common.R
 
-class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecycler, adType: String, unitId: String) : LoadAdTask(context, adViewRecycler, adType, unitId) {
+class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecycler, adType: String, unitId: String, private vararg val bannerAdSizes: AdSize) : LoadAdTask(context, adViewRecycler, adType, unitId) {
 
     private var adLoader: AdLoader? = null
     private var mUnifiedNativeAd: UnifiedNativeAd? = null
+    private var mPublisherAdView: PublisherAdView? = null
 
     private fun clearAds() {
+        mPublisherAdView?.destroy()
+        mPublisherAdView = null
         mUnifiedNativeAd?.destroy()
         mUnifiedNativeAd = null
     }
@@ -31,7 +36,7 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
             return
         }
         if (adLoader != null) {
-            if (adType == AdType.AD_DFP_NATIVE) {
+            if (adType == AdType.AD_DFP) {
                 adLoader?.loadAd(PublisherAdRequest.Builder().build())
             } else {
                 adLoader?.loadAd(AdRequest.Builder().build())
@@ -48,7 +53,7 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
                 }
                 .withAdListener(object : com.google.android.gms.ads.AdListener() {
                     override fun onAdFailedToLoad(errorCode: Int) {
-                        if (mUnifiedNativeAd != null) {
+                        if (mUnifiedNativeAd != null || mPublisherAdView != null) {
                             onLoaded()
                         } else {
                             onFailedToLoad()
@@ -59,7 +64,17 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
                         // Methods in the NativeAdOptions.Builder class can be
                         // used here to specify individual options settings.
                         .build())
-        if (adType == AdType.AD_DFP_NATIVE) {
+        if (bannerAdSizes.isNotEmpty()) {
+            loaderBuilder.forPublisherAdView(object : OnPublisherAdViewLoadedListener {
+                override fun onPublisherAdViewLoaded(publisherAdView: PublisherAdView?) {
+                    clearAds()
+                    mPublisherAdView = publisherAdView
+                    onLoaded()
+                }
+
+            }, *bannerAdSizes)
+        }
+        if (adType == AdType.AD_DFP) {
             loaderBuilder.withPublisherAdViewOptions(PublisherAdViewOptions.Builder().build())
         }
         adLoader = loaderBuilder.build()
@@ -67,7 +82,7 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
 
         // Request an ad
         //        adLoader.loadAd(new AdRequest.Builder().addTestDevice("33BE2250B43518CCDA7DE426D04EE232").build());
-        if (adType == AdType.AD_DFP_NATIVE) {
+        if (adType == AdType.AD_DFP) {
             adLoader?.loadAd(PublisherAdRequest.Builder().build())
         } else {
             adLoader?.loadAd(AdRequest.Builder().build())
@@ -78,17 +93,23 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
         super.attachAdView(adContainer)
 
         val unifiedNativeAd = mUnifiedNativeAd
+        val publisherAdView = mPublisherAdView
+        var adView: View? = null
         if (unifiedNativeAd != null) {
             adContainer.removeAllViews()
-            val adView = mAdViewRecycler.obtainAdView(mContext, AdViewType.AD_ADMOB_UNIFIED, mUnitId) as? UnifiedNativeAdView
-            if (adView != null) {
-                populateAdView(unifiedNativeAd, adView)
-
-                if (adView.parent != null && adView.parent is ViewGroup) {
-                    (adView.parent as ViewGroup).removeView(adView)
-                }
-                adContainer.addView(adView)
+            val unifiedNativeAdView = mAdViewRecycler.obtainAdView(mContext, AdViewType.AD_ADMOB_UNIFIED, mUnitId) as? UnifiedNativeAdView
+            if (unifiedNativeAdView != null) {
+                populateAdView(unifiedNativeAd, unifiedNativeAdView)
+                adView = unifiedNativeAdView
             }
+        } else if (publisherAdView != null) {
+            adView = publisherAdView
+        }
+        if (adView != null) {
+            if (adView.parent != null && adView.parent is ViewGroup) {
+                (adView.parent as ViewGroup).removeView(adView)
+            }
+            adContainer.addView(adView)
         }
     }
 
@@ -143,7 +164,9 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
         } else {
             adView.headlineView?.visibility = View.VISIBLE
             (adView.headlineView as TextView).text = title
-            adView.bodyView?.visibility = View.GONE
+            if (adView.mediaView == null) {
+                adView.bodyView?.visibility = View.GONE
+            }
         }
         (adView.bodyView as? TextView)?.text = unifiedNativeAd.body
         (adView.callToActionView as Button).text = unifiedNativeAd.callToAction
