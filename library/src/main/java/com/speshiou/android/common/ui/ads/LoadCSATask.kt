@@ -2,8 +2,6 @@ package com.speshiou.android.common.ui.ads
 
 import android.content.Context
 import android.text.TextUtils
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.google.android.gms.ads.AdSize
@@ -17,6 +15,7 @@ import com.speshiou.android.common.R
 class LoadCSATask(context: Context, adViewRecycler: AdViewRecycler, adType: String, unitId: String, var keyword: String?) : LoadAdTask(context, adViewRecycler, adType, unitId) {
 
     private var mSearchAdView: SearchAdView? = null
+    var page = 0
 
     public override fun onLoad() {
         super.onLoad()
@@ -61,6 +60,9 @@ class LoadCSATask(context: Context, adViewRecycler: AdViewRecycler, adType: Stri
         // Customization options (set using setters on
         // DynamicHeightSearchAdRequest.Builder)
         builder.setNumber(1)
+        if (page > 0) {
+            builder.setPage(page)
+        }
         builder.setCssWidth(300)     // Equivalent to "width" CSA parameter
         builder.setIsSellerRatingsEnabled(true)
         builder.setIsTitleBold(false)
@@ -71,13 +73,12 @@ class LoadCSATask(context: Context, adViewRecycler: AdViewRecycler, adType: Stri
 //        builder.setLongerHeadlines(false)
         builder.setAdvancedOptionValue("csa_longerHeadlines", "false")
         builder.setIsLocationEnabled(false)
-//        builder.setIsSiteLinksEnabled(false)
         builder.setAdvancedOptionValue("csa_siteLinks", "false")
         builder.setIsSellerRatingsEnabled(false)
         builder.setDetailedAttribution(false)
         builder.setAdvancedOptionValue("csa_domainLinkAboveDescription", "false")
         builder.setColorDomainLink("#9197A3")
-        builder.setIsSiteLinksEnabled(true)
+        builder.setIsSiteLinksEnabled(false)
         builder.setIsClickToCallEnabled(false)
         searchAdView.loadAd(builder.build())
     }
