@@ -170,8 +170,13 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
         }
         (adView.bodyView as? TextView)?.text = unifiedNativeAd.body
         (adView.callToActionView as Button).text = unifiedNativeAd.callToAction
-        (adView.iconView as ImageView).setImageDrawable(
-                unifiedNativeAd.icon?.drawable)
+        val icon = unifiedNativeAd.icon?.drawable
+        if (icon == null) {
+            adView.iconView?.visibility = View.GONE
+        } else {
+            adView.iconView?.visibility = View.VISIBLE
+            (adView.iconView as ImageView).setImageDrawable(icon)
+        }
 
         // Apps can check the VideoController's hasVideoContent property to determine if the
         // NativeAppInstallAd has a video asset.
