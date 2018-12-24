@@ -28,7 +28,6 @@ class LoadDfpBannerTask(context: Context, adViewRecycler: AdViewRecycler, adType
             override fun onAdFailedToLoad(errorCode: Int) {
                 super.onAdFailedToLoad(errorCode)
                 onFailedToLoad()
-                Log.e("joey", "onAdFailedToLoad $errorCode")
             }
 
             override fun onAdLoaded() {
