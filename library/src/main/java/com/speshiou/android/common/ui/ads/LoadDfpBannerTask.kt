@@ -1,9 +1,7 @@
 package com.speshiou.android.common.ui.ads
 
 import android.content.Context
-import android.util.Log
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest
 import com.google.android.gms.ads.doubleclick.PublisherAdView
@@ -16,7 +14,7 @@ class LoadDfpBannerTask(context: Context, adViewRecycler: AdViewRecycler, adType
     public override fun onLoad() {
 //        super.onLoad()
 
-        if (mPublisherAdView != null) {
+        if (bannerAdSizes.isEmpty() || mPublisherAdView != null) {
             return
         }
 
