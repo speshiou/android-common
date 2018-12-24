@@ -80,7 +80,7 @@ class LoadFbNativeAdTask(context: Context, adViewRecycler: AdViewRecycler, fbAdT
                 AdViewType.AD_FB_NATIVE_BANNER
             }
         }
-        val adView = mAdViewRecycler.obtainAdView(mContext, adViewType, mUnitId) ?: return
+        val adView = mAdViewRecycler.obtainAdView(mContext, adViewType) ?: return
         ad.unregisterView()
 
 
