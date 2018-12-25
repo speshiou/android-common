@@ -8,11 +8,11 @@ class InterstitialAdManager {
             var task: LoadInterstitialAdTask? = null
             if (unitId.trim().isNotBlank()) {
                 if (adType == InterstitialAdType.FB) {
-                    task = LoadFbInterstitialAdTask(context, unitId)
+                    task = LoadFbInterstitialAdTask(context, adType, unitId)
                 } else if (adType == InterstitialAdType.ADMOB) {
-                    task = LoadAdMobInterstitialAdTask(context, unitId)
+                    task = LoadAdMobInterstitialAdTask(context, adType, unitId)
                 } else if (adType == InterstitialAdType.DFP) {
-                    task = LoadDfpInterstitialAdTask(context, unitId)
+                    task = LoadDfpInterstitialAdTask(context, adType, unitId)
                 }
             }
             return task
