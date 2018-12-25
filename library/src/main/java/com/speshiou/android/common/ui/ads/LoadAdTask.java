@@ -118,7 +118,7 @@ public class LoadAdTask implements Runnable {
     }
 
     protected void attachAdView(ViewGroup adContainer) {
-//            Log.e("joey", "[" + this.getClass().getSimpleName() + "] attachAdView");
+
     }
 
     protected void detachAdView() {

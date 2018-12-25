@@ -1,14 +1,17 @@
 package com.speshiou.android.common.ui.ads
 
 import android.content.Context
+import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
 import com.facebook.ads.*
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.speshiou.android.common.R
+import com.speshiou.android.common.ui.BaseApplication
 import java.util.ArrayList
 
-class LoadFbNativeAdTask(context: Context, adViewRecycler: AdViewRecycler, fbAdType: String, unitId: String) : LoadAdTask(context, adViewRecycler, fbAdType, unitId) {
+class LoadFbNativeAdTask(context: Context, adViewRecycler: AdViewRecycler, val fbAdType: String, unitId: String) : LoadAdTask(context, adViewRecycler, fbAdType, unitId) {
 
     private var mNativeAd: NativeAdBase? = null
 
@@ -31,6 +34,12 @@ class LoadFbNativeAdTask(context: Context, adViewRecycler: AdViewRecycler, fbAdT
                 } else {
                     onFailedToLoad()
                 }
+
+                val bundle = Bundle()
+                bundle.putString("ad_type", fbAdType)
+                bundle.putString("ad_id", mUnitId)
+                bundle.putString("ad_error_code", error.errorCode.toString())
+                BaseApplication.firebaseAnalytics?.logEvent("ad_error", bundle)
             }
 
             override fun onAdLoaded(ad: Ad) {
