@@ -5,7 +5,7 @@ import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest
 import com.google.android.gms.ads.doubleclick.PublisherInterstitialAd
 
-class LoadDfpInterstitialAdTask(context: Context, adId: String): LoadInterstitialAdTask(context, adId) {
+class LoadDfpInterstitialAdTask(context: Context, adType: String, adId: String): LoadInterstitialAdTask(context, adType, adId) {
     private var interstitialAd: PublisherInterstitialAd? = null
 
     override fun onLoad() {
@@ -17,6 +17,8 @@ class LoadDfpInterstitialAdTask(context: Context, adId: String): LoadInterstitia
             override fun onAdOpened() {
                 super.onAdOpened()
                 listener?.onAdDisplayed()
+
+                AdCompat.logImpressionEvent(adType, adId)
             }
 
             override fun onAdClosed() {
@@ -27,6 +29,8 @@ class LoadDfpInterstitialAdTask(context: Context, adId: String): LoadInterstitia
             override fun onAdClicked() {
                 super.onAdClicked()
                 listener?.onAdClicked()
+
+                AdCompat.logClickEvent(adType, adId)
             }
 
             override fun onAdLoaded() {

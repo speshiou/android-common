@@ -43,6 +43,16 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
 
         val loaderBuilder = AdLoader.Builder(mContext, mUnitId)
                 .withAdListener(object : com.google.android.gms.ads.AdListener() {
+                    override fun onAdImpression() {
+                        super.onAdImpression()
+                        AdCompat.logImpressionEvent(adType, mUnitId)
+                    }
+
+                    override fun onAdClicked() {
+                        super.onAdClicked()
+                        AdCompat.logClickEvent(adType, mUnitId)
+                    }
+
                     override fun onAdFailedToLoad(errorCode: Int) {
                         if (mUnifiedNativeAd != null || mPublisherAdView != null) {
                             onLoaded()

@@ -38,6 +38,16 @@ class LoadDfpBannerTask(context: Context, adViewRecycler: AdViewRecycler, adType
 //
                 onLoaded()
             }
+
+            override fun onAdImpression() {
+                super.onAdImpression()
+                AdCompat.logImpressionEvent(adType, mUnitId)
+            }
+
+            override fun onAdClicked() {
+                super.onAdClicked()
+                AdCompat.logClickEvent(adType, mUnitId)
+            }
         }
         mPublisherAdView = publisherAdView
 //        publisherAdView.loadAd(PublisherAdRequest.Builder().build())

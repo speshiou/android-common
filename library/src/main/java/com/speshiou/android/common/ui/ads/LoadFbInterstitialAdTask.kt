@@ -6,7 +6,7 @@ import com.facebook.ads.AdError
 import com.facebook.ads.InterstitialAd
 import com.facebook.ads.InterstitialAdListener
 
-class LoadFbInterstitialAdTask(context: Context, adId: String): LoadInterstitialAdTask(context, adId) {
+class LoadFbInterstitialAdTask(context: Context, adType: String, adId: String): LoadInterstitialAdTask(context, adType, adId) {
 
     private var interstitialAd: InterstitialAd? = null
 
@@ -16,6 +16,8 @@ class LoadFbInterstitialAdTask(context: Context, adId: String): LoadInterstitial
         interstitialAd?.setAdListener(object : InterstitialAdListener {
             override fun onInterstitialDisplayed(ad: Ad) {
                 listener?.onAdDisplayed()
+
+                AdCompat.logImpressionEvent(adType, adId)
             }
 
             override fun onInterstitialDismissed(ad: Ad) {
@@ -32,6 +34,8 @@ class LoadFbInterstitialAdTask(context: Context, adId: String): LoadInterstitial
 
             override fun onAdClicked(ad: Ad) {
                 listener?.onAdClicked()
+
+                AdCompat.logClickEvent(adType, adId)
             }
 
             override fun onLoggingImpression(ad: Ad) {

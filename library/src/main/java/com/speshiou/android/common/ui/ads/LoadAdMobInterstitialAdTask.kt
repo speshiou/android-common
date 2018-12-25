@@ -5,7 +5,7 @@ import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
 
-class LoadAdMobInterstitialAdTask(context: Context, adId: String): LoadInterstitialAdTask(context, adId) {
+class LoadAdMobInterstitialAdTask(context: Context, adType: String, adId: String): LoadInterstitialAdTask(context, adType, adId) {
     private var interstitialAd: InterstitialAd? = null
 
     override fun onLoad() {
@@ -17,6 +17,8 @@ class LoadAdMobInterstitialAdTask(context: Context, adId: String): LoadInterstit
             override fun onAdOpened() {
                 super.onAdOpened()
                 listener?.onAdDisplayed()
+
+                AdCompat.logImpressionEvent(adType, adId)
             }
 
             override fun onAdClosed() {
@@ -27,6 +29,8 @@ class LoadAdMobInterstitialAdTask(context: Context, adId: String): LoadInterstit
             override fun onAdClicked() {
                 super.onAdClicked()
                 listener?.onAdClicked()
+
+                AdCompat.logClickEvent(adType, adId)
             }
 
             override fun onAdLoaded() {

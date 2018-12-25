@@ -2,7 +2,7 @@ package com.speshiou.android.common.ui.ads
 
 import android.content.Context
 
-open class LoadInterstitialAdTask(val context: Context, val adId: String) {
+open class LoadInterstitialAdTask(val context: Context, val adType: String, val adId: String) {
 
     var listener: InterstitialAdListener? = null
 

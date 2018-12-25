@@ -53,11 +53,11 @@ class LoadFbNativeAdTask(context: Context, adViewRecycler: AdViewRecycler, val f
             }
 
             override fun onAdClicked(ad: Ad) {
-                // Ad clicked callback
+                AdCompat.logClickEvent(adType, mUnitId)
             }
 
             override fun onLoggingImpression(ad: Ad) {
-
+                AdCompat.logImpressionEvent(adType, mUnitId)
             }
         })
 

@@ -1,6 +1,8 @@
 package com.speshiou.android.common.ui.ads
 
+import android.os.Bundle
 import com.google.android.gms.ads.AdSize
+import com.speshiou.android.common.ui.BaseApplication
 
 class AdCompat {
     companion object {
@@ -39,6 +41,20 @@ class AdCompat {
                 }
             }
             return sizes.toTypedArray()
+        }
+
+        fun logClickEvent(adType: String, adId: String) {
+            val bundle = Bundle()
+            bundle.putString("ad_type", adType)
+            bundle.putString("ad_id", adId)
+            BaseApplication.firebaseAnalytics?.logEvent("ad_click_ab", bundle)
+        }
+
+        fun logImpressionEvent(adType: String, adId: String) {
+            val bundle = Bundle()
+            bundle.putString("ad_type", adType)
+            bundle.putString("ad_id", adId)
+            BaseApplication.firebaseAnalytics?.logEvent("ad_impression_ab", bundle)
         }
     }
 }

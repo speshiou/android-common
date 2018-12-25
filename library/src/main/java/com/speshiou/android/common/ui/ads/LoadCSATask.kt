@@ -51,6 +51,16 @@ class LoadCSATask(context: Context, adViewRecycler: AdViewRecycler, adType: Stri
 
                 onLoaded()
             }
+
+            override fun onAdClicked() {
+                super.onAdClicked()
+                AdCompat.logClickEvent(adType, mUnitId)
+            }
+
+            override fun onAdImpression() {
+                super.onAdImpression()
+                AdCompat.logImpressionEvent(adType, mUnitId)
+            }
         }
         val builder = DynamicHeightSearchAdRequest.Builder()
         builder.setQuery(keyword)
