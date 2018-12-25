@@ -40,7 +40,7 @@ class AdViewRecycler(private val mContext: Context) {
             task = LoadFbNativeAdTask(mContext, this, adType, unitId)
         } else if (adType == AdType.AD_FB_NATIVE_BANNER) {
             task = LoadFbNativeAdTask(mContext, this, adType, unitId)
-        } else if ((adType == AdType.AD_DFP || adType == AdType.AD_DFP_BANNER) && !bannerAdSizes.contains(AdSize.FLUID)) {
+        } else if (adType == AdType.AD_DFP || (adType == AdType.AD_DFP_BANNER && !bannerAdSizes.contains(AdSize.FLUID))) {
             task = LoadAdmobNativeAdUnifiedTask(mContext, this, adType, unitId, *bannerAdSizes)
         } else if (adType == AdType.AD_DFP_BANNER) {
             task = LoadDfpBannerTask(mContext, this, adType, unitId, *bannerAdSizes)
