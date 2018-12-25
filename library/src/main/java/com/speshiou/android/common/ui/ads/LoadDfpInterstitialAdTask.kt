@@ -1,7 +1,6 @@
 package com.speshiou.android.common.ui.ads
 
 import android.content.Context
-import android.util.Log
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest
 import com.google.android.gms.ads.doubleclick.PublisherInterstitialAd
