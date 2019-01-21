@@ -78,11 +78,15 @@ class AdViewRecycler(private val mContext: Context) {
     }
 
     fun recycleAdTask(task: LoadAdTask) {
-        var tasks: ArrayList<LoadAdTask>? = mLoadAdTaskMap[task.adType]
-        if (tasks == null) {
-            tasks = ArrayList()
-            mLoadAdTaskMap[task.adType] = tasks
+        var tasks = mLoadAdTaskMap[task.adType]
+        if (tasks != null) {
+            for (task in tasks) {
+                task.recycle()
+            }
+            tasks.clear()
         }
+        tasks = arrayListOf()
+        mLoadAdTaskMap[task.adType] = tasks
         tasks.add(task)
     }
 

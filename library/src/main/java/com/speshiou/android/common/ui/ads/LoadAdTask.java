@@ -101,12 +101,20 @@ public class LoadAdTask implements Runnable {
     }
 
     public void setAdContainer(ViewGroup adContainer) {
+        setAdContainer(adContainer, -1);
+    }
+
+    public void setAdContainer(ViewGroup adContainer, int index) {
         mAdContainer = adContainer;
         if (mAdContainer != null) {
             mAdContainer.setTag(this);
             mAdContainer.removeAllViews();
             if (!isLoading() && !mFailedInLoadingAd) {
-                attachAdView(adContainer);
+                if (index == -1) {
+                    attachAdView(mAdContainer);
+                } else {
+                    attachAdView(adContainer, index);
+                }
             }
         } else {
             detachAdView();
@@ -118,10 +126,18 @@ public class LoadAdTask implements Runnable {
     }
 
     protected void attachAdView(ViewGroup adContainer) {
+        attachAdView(adContainer, 0);
+    }
+
+    protected void attachAdView(ViewGroup adContainer, int index) {
 
     }
 
     protected void detachAdView() {
+
+    }
+
+    public void recycle() {
 
     }
 }

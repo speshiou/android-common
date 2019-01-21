@@ -19,12 +19,19 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
     private var adLoader: AdLoader? = null
     private var mUnifiedNativeAd: UnifiedNativeAd? = null
     private var mPublisherAdView: PublisherAdView? = null
+    private var mUnifiedNativeAds = arrayListOf<UnifiedNativeAd>()
+
+    var adCount = 1
 
     private fun clearAds() {
         mPublisherAdView?.destroy()
         mPublisherAdView = null
         mUnifiedNativeAd?.destroy()
         mUnifiedNativeAd = null
+        for (ad in mUnifiedNativeAds) {
+            ad.destroy()
+        }
+        mUnifiedNativeAds.clear()
     }
 
     public override fun onLoad() {
@@ -33,11 +40,7 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
             return
         }
         if (adLoader != null) {
-            if (adType == AdType.AD_DFP || adType == AdType.AD_DFP_BANNER) {
-                adLoader?.loadAd(PublisherAdRequest.Builder().build())
-            } else {
-                adLoader?.loadAd(AdRequest.Builder().build())
-            }
+            performLoader()
             return
         }
 
@@ -54,6 +57,7 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
                     }
 
                     override fun onAdFailedToLoad(errorCode: Int) {
+//                        Log.e("joey", "onAdFailedToLoad $errorCode")
                         if (mUnifiedNativeAd != null || mPublisherAdView != null) {
                             onLoaded()
                         } else {
@@ -68,8 +72,12 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
         if (adType != AdType.AD_DFP_BANNER) {
             loaderBuilder.forUnifiedNativeAd {
                 unifiedNativeAd ->
-                clearAds()
-                mUnifiedNativeAd = unifiedNativeAd
+                if (adType == AdType.AD_ADMOB_NATIVE) {
+                    mUnifiedNativeAds.add(unifiedNativeAd)
+                } else {
+                    clearAds()
+                    mUnifiedNativeAd = unifiedNativeAd
+                }
                 onLoaded()
             }
         }
@@ -88,20 +96,30 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
         }
         adLoader = loaderBuilder.build()
 
+        performLoader()
+    }
 
+    private fun performLoader() {
         // Request an ad
-        //        adLoader.loadAd(new AdRequest.Builder().addTestDevice("33BE2250B43518CCDA7DE426D04EE232").build());
         if (adType == AdType.AD_DFP || adType == AdType.AD_DFP_BANNER) {
+//            adLoader?.loadAd(PublisherAdRequest.Builder()
+//                    .addTestDevice("8A347539F0976701577341ECB483FE19")
+//                    .addTestDevice("F31D20B68A1791570F88B6A627A4182E").build())
             adLoader?.loadAd(PublisherAdRequest.Builder().build())
         } else {
-            adLoader?.loadAd(AdRequest.Builder().build())
+//            adLoader?.loadAd(AdRequest.Builder()
+//                    .addTestDevice("8A347539F0976701577341ECB483FE19")
+//                    .addTestDevice("F31D20B68A1791570F88B6A627A4182E").build())
+            val extras = FacebookAdapter.FacebookExtrasBundleBuilder()
+                    .build()
+            adLoader?.loadAds(AdRequest.Builder().addNetworkExtrasBundle(FacebookAdapter::class.java, extras).build(), adCount)
         }
     }
 
-    public override fun attachAdView(adContainer: ViewGroup) {
-        super.attachAdView(adContainer)
+    public override fun attachAdView(adContainer: ViewGroup, index: Int) {
+        super.attachAdView(adContainer, index)
 
-        val unifiedNativeAd = mUnifiedNativeAd
+        val unifiedNativeAd = getUnifiedNativeAd(index)
         val publisherAdView = mPublisherAdView
         var adView: View? = null
         if (unifiedNativeAd != null) {
@@ -120,6 +138,17 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
             }
             adContainer.addView(adView)
         }
+    }
+
+    private fun getUnifiedNativeAd(index: Int): UnifiedNativeAd? {
+        if (adType == AdType.AD_ADMOB_NATIVE) {
+            if (index < mUnifiedNativeAds.size && index >= 0) {
+                return mUnifiedNativeAds[index]
+            }
+        } else {
+            return mUnifiedNativeAd
+        }
+        return null
     }
 
     protected fun populateAdView(unifiedNativeAd: UnifiedNativeAd,
@@ -174,7 +203,7 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
             adView.headlineView?.visibility = View.VISIBLE
             (adView.headlineView as TextView).text = title
             if (adView.mediaView == null) {
-                adView.bodyView?.visibility = View.GONE
+//                adView.bodyView?.visibility = View.GONE
             }
         }
         (adView.bodyView as? TextView)?.text = unifiedNativeAd.body
@@ -249,5 +278,10 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
 
         // Assign native ad object to the native view.
         adView.setNativeAd(unifiedNativeAd)
+    }
+
+    override fun recycle() {
+        super.recycle()
+        clearAds()
     }
 }
