@@ -6,7 +6,6 @@ import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
 import com.facebook.ads.*
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.speshiou.android.common.R
 import com.speshiou.android.common.ui.BaseApplication
 import java.util.ArrayList
@@ -108,10 +107,10 @@ class LoadFbNativeAdTask(context: Context, adViewRecycler: AdViewRecycler, val f
         viewHolder.buttonAction.visibility = if (ad.hasCallToAction()) View.VISIBLE else View.GONE
         viewHolder.buttonAction.text = ad.adCallToAction
 
-        // Add the AdChoices icon
-        val adChoicesView = AdChoicesView(mContext, ad, true)
-        viewHolder.adChoicePlaceHolder.removeAllViews()
-        viewHolder.adChoicePlaceHolder.addView(adChoicesView)
+        // Add the AdOptionsView
+        val adOptionsView = AdOptionsView(mContext, ad, adView.findViewById(R.id.native_ad_layout))
+        viewHolder.adOptionsPlaceHolder.removeAllViews()
+        viewHolder.adOptionsPlaceHolder.addView(adOptionsView)
 
         // Register the Title and CTA button to listen for clicks.
         val clickableViews = ArrayList<View>()

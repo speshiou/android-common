@@ -12,12 +12,9 @@ import java.util.HashMap
 class AdViewRecycler(private val mContext: Context) {
 
     private val mPool = HashMap<Int, ArrayList<View>>()
-    private val mLoadAdTasks = HashMap<String, LoadAdTask>()
     private val mLoadAdTaskMap = HashMap<String, ArrayList<LoadAdTask>>()
-    //    private HashMap<ViewGroup, LoadAdTask> mLoadAdTaskMap = new HashMap<>();
 
     var bannerAdSizes = arrayOf(AdSize.LARGE_BANNER)
-    private var mBannerExpAdSize = AdSize.LARGE_BANNER
     var keyword: String? = null
     private var mNativeAdLayoutResId = R.layout.ad_s
     var admobUnifiedAdLayoutResId = R.layout.admob_ad_unified
@@ -25,14 +22,6 @@ class AdViewRecycler(private val mContext: Context) {
     var fbNativeBannerAdLayoutResId = R.layout.ad_fb_native_banner
 
     var onClickRemoveAdButtonListener: View.OnClickListener? = null
-
-    fun setNativeExpAdSize(adSize: AdSize) {
-        mBannerExpAdSize = adSize
-    }
-
-    fun setNativeAdLayoutResId(layoutResId: Int) {
-        mNativeAdLayoutResId = layoutResId
-    }
 
     private fun createLoadAdTask(adType: String, unitId: String): LoadAdTask? {
         var task: LoadAdTask? = null
@@ -88,22 +77,6 @@ class AdViewRecycler(private val mContext: Context) {
         tasks = arrayListOf()
         mLoadAdTaskMap[task.adType] = tasks
         tasks.add(task)
-    }
-
-    fun loadAd(adContainer: ViewGroup, adType: String, unitId: String) {
-        var task: LoadAdTask? = mLoadAdTasks[unitId]
-        if (task == null) {
-            task = createLoadAdTask(adType, unitId)
-        }
-        //
-        //        LoadAdTask boundTaskMap = mLoadAdTaskMap.get(adContainer);
-        //        if (boundTaskMap != null && boundTaskMap.getAdContainer() != null && boundTaskMap.getAdContainer().equals(adContainer)) {
-        //            boundTaskMap.setAdContainer(null);
-        //        }
-        //        mLoadAdTaskMap.put(adContainer, task);
-        //        mLoadAdTasks.put(unitId, task);
-        //        task.run();
-        //        task.setAdContainer(adContainer);
     }
 
     fun obtainAdView(context: Context, adViewType: Int): View? {

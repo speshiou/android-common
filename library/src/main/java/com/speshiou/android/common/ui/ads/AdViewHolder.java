@@ -25,7 +25,7 @@ public class AdViewHolder extends RecyclerView.ViewHolder {
     public RatingBar ratingBar;
     public ImageView imageViewIcon;
     public ViewGroup adContainer;
-    public ViewGroup adChoicePlaceHolder;
+    public ViewGroup adOptionsPlaceHolder;
 
     public AdViewHolder(View itemView) {
         super(itemView);
@@ -39,7 +39,7 @@ public class AdViewHolder extends RecyclerView.ViewHolder {
         buttonAction = (TextView) itemView.findViewById(R.id.button_action);
         buttonRemoveAd = itemView.findViewById(R.id.button_remove_ad);
         adContainer = (ViewGroup) itemView.findViewById(R.id.ad_container);
-        adChoicePlaceHolder = (ViewGroup) itemView.findViewById(R.id.adchoice_placeholder);
+        adOptionsPlaceHolder = (ViewGroup) itemView.findViewById(R.id.adchoice_placeholder);
         resetViews();
     }
 
@@ -62,10 +62,5 @@ public class AdViewHolder extends RecyclerView.ViewHolder {
         if (imageViewIcon != null) {
             imageViewIcon.setImageDrawable(null);
         }
-    }
-
-    public void loadAd(AdViewRecycler adViewRecycler, String adType, String unitId) {
-        adContainer.removeAllViews();
-        adViewRecycler.loadAd(adContainer, adType, unitId);
     }
 }
