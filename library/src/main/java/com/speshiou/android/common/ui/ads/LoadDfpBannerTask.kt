@@ -6,36 +6,38 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest
 import com.google.android.gms.ads.doubleclick.PublisherAdView
 
-class LoadDfpBannerTask(context: Context, adViewRecycler: AdViewRecycler, adType: String, unitId: String, private vararg val bannerAdSizes: AdSize) : LoadAdTask(context, adViewRecycler, adType, unitId) {
+class LoadDfpBannerTask(context: Context, adViewRecycler: AdViewRecycler, adType: String, unitId: String, val adViewWidth: Int, private vararg val bannerAdSizes: AdSize) : LoadAdTask(context, adViewRecycler, adType, unitId) {
 
     private var mPublisherAdView: PublisherAdView? = null
-    var page = 0
 
     public override fun onLoad() {
-//        super.onLoad()
-
-        if (bannerAdSizes.isEmpty() || mPublisherAdView != null) {
+        super.onLoad()
+        if (bannerAdSizes.isEmpty() || mPublisherAdView != null || adViewWidth <= 0) {
             return
         }
 
         val publisherAdView = PublisherAdView(mContext)
+        publisherAdView.layoutParams = ViewGroup.LayoutParams(adViewWidth, ViewGroup.LayoutParams.WRAP_CONTENT)
         publisherAdView.setAdSizes(*bannerAdSizes)
         publisherAdView.adUnitId = mUnitId
 
         publisherAdView.adListener = object : com.google.android.gms.ads.AdListener() {
             override fun onAdFailedToLoad(errorCode: Int) {
                 super.onAdFailedToLoad(errorCode)
-                onFailedToLoad()
+                if (mPublisherAdView != null) {
+                    onLoaded()
+                } else {
+                    onFailedToLoad()
+                }
             }
 
             override fun onAdLoaded() {
                 super.onAdLoaded()
-//                if (mPublisherAdView != null) {
-//                    mPublisherAdView?.destroy()
-//                }
+                if (mPublisherAdView != null) {
+                    mPublisherAdView?.destroy()
+                }
 
-//                mPublisherAdView = publisherAdView
-//
+                mPublisherAdView = publisherAdView
                 onLoaded()
             }
 
@@ -49,8 +51,7 @@ class LoadDfpBannerTask(context: Context, adViewRecycler: AdViewRecycler, adType
                 AdCompat.logClickEvent(adType, mUnitId)
             }
         }
-        mPublisherAdView = publisherAdView
-//        publisherAdView.loadAd(PublisherAdRequest.Builder().build())
+        publisherAdView.loadAd(PublisherAdRequest.Builder().build())
     }
 
     public override fun attachAdView(adContainer: ViewGroup) {
@@ -65,11 +66,11 @@ class LoadDfpBannerTask(context: Context, adViewRecycler: AdViewRecycler, adType
                 (adView.parent as ViewGroup).removeView(adView)
             }
             adContainer.addView(adView)
-
-            if (isReadyForRefreshing) {
-                super.onLoad()
-                adView.loadAd(PublisherAdRequest.Builder().build())
-            }
         }
+    }
+
+    override fun recycle() {
+        super.recycle()
+        mPublisherAdView?.destroy()
     }
 }

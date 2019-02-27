@@ -3,7 +3,6 @@ package com.speshiou.android.common.ui.ads
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import com.google.android.gms.ads.AdSize
 import com.speshiou.android.common.R
 import java.util.ArrayList
@@ -14,6 +13,7 @@ class AdViewRecycler(private val mContext: Context) {
     private val mPool = HashMap<Int, ArrayList<View>>()
     private val mLoadAdTaskMap = HashMap<String, ArrayList<LoadAdTask>>()
 
+    var adViewWidth = -1
     var bannerAdSizes = arrayOf(AdSize.LARGE_BANNER)
     var keyword: String? = null
     private var mNativeAdLayoutResId = R.layout.ad_s
@@ -23,6 +23,10 @@ class AdViewRecycler(private val mContext: Context) {
 
     var onClickRemoveAdButtonListener: View.OnClickListener? = null
 
+    init {
+        adViewWidth = mContext.resources.displayMetrics.widthPixels
+    }
+
     private fun createLoadAdTask(adType: String, unitId: String): LoadAdTask? {
         var task: LoadAdTask? = null
         if (adType == AdType.AD_FB_NATIVE) {
@@ -31,8 +35,8 @@ class AdViewRecycler(private val mContext: Context) {
             task = LoadFbNativeAdTask(mContext, this, adType, unitId)
         } else if (adType == AdType.AD_DFP || (adType == AdType.AD_DFP_BANNER && !bannerAdSizes.contains(AdSize.FLUID))) {
             task = LoadAdmobNativeAdUnifiedTask(mContext, this, adType, unitId, *bannerAdSizes)
-        } else if (adType == AdType.AD_DFP_BANNER) {
-            task = LoadDfpBannerTask(mContext, this, adType, unitId, *bannerAdSizes)
+        } else if (adType == AdType.AD_DFP || adType == AdType.AD_DFP_BANNER) {
+            task = LoadDfpBannerTask(mContext, this, adType, unitId, adViewWidth, *bannerAdSizes)
         } else if (adType == AdType.AD_ADMOB_NATIVE) {
             task = LoadAdmobNativeAdUnifiedTask(mContext, this, adType, unitId)
         } else if (adType == AdType.AD_CSA) {
