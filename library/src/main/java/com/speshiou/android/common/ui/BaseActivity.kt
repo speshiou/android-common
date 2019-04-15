@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
 import android.net.Uri
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
 import android.opengl.ETC1.getHeight
