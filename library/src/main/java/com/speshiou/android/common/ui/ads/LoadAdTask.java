@@ -26,12 +26,12 @@ import java.util.List;
 
 public class LoadAdTask implements Runnable {
 
-    public static final int AD_REFRESH_RATE = 60;
+    public static final int AD_REFRESH_RATE = -1;
 
     protected Context mContext;
     protected AdViewRecycler mAdViewRecycler;
     protected String mUnitId;
-    protected long mRefreshRateMillis = AD_REFRESH_RATE * 1000;
+    protected long mRefreshRateMillis = -1;
     protected ViewGroup mAdContainer;
     private boolean mLoading = false;
     private boolean mFailedInLoadingAd = false;
@@ -44,6 +44,7 @@ public class LoadAdTask implements Runnable {
         mAdViewRecycler = adViewRecycler;
         mUnitId = unitId;
         this.adType = adType;
+        setRefreshRate(AD_REFRESH_RATE);
     }
 
     @Override
@@ -89,11 +90,21 @@ public class LoadAdTask implements Runnable {
     }
 
     protected boolean isReadyForRefreshing() {
+        if (mLoadedTime == 0) {
+            return true;
+        }
+        if (getRefreshRate() <= 0) {
+            return false;
+        }
         return System.currentTimeMillis() - mLoadedTime > getRefreshRate();
     }
 
     public void setRefreshRate(int refreshRate) {
-        mRefreshRateMillis = (refreshRate <= 0 ? AD_REFRESH_RATE : refreshRate) * 1000;
+        if (refreshRate <= 0) {
+            mRefreshRateMillis = -1;
+        } else {
+            mRefreshRateMillis = refreshRate * 1000;
+        }
     }
 
     protected long getRefreshRate() {
