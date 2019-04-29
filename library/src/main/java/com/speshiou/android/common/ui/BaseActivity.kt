@@ -13,6 +13,7 @@ import android.os.Build
 import android.view.View
 import android.view.ViewTreeObserver
 import android.view.ViewGroup
+import com.speshiou.android.common.ui.utils.ViewUtils
 import com.speshiou.android.common.ui.widget.OnKeyboardVisibilityListener
 
 
@@ -54,6 +55,12 @@ open class BaseActivity: AppCompatActivity() {
             uris.add(uri)
         }
         return uris.toTypedArray()
+    }
+
+    fun showSoftKeyboard(view: View) {
+        if (view.requestFocus()) {
+            ViewUtils.showSoftKeyboard(view)
+        }
     }
 
     fun hideSoftInput() {

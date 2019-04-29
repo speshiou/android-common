@@ -1,8 +1,11 @@
 package com.speshiou.android.common.ui.utils
 
+import android.content.Context
 import android.graphics.drawable.Drawable
 import androidx.core.graphics.drawable.DrawableCompat
 import android.view.MenuItem
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 
 class ViewUtils() {
@@ -32,6 +35,11 @@ class ViewUtils() {
                     drawable.setBounds(x, x, size, size)
                 }
             }
+        }
+
+        fun showSoftKeyboard(view: View) {
+            val imm = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
         }
     }
 }
