@@ -9,6 +9,7 @@ import com.google.ads.mediation.facebook.FacebookAdapter
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.VideoOptions
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest
 import com.google.android.gms.ads.doubleclick.PublisherAdView
 import com.google.android.gms.ads.formats.*
@@ -68,6 +69,8 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
                 .withNativeAdOptions(NativeAdOptions.Builder()
                         // Methods in the NativeAdOptions.Builder class can be
                         // used here to specify individual options settings.
+                        .setImageOrientation(NativeAdOptions.ORIENTATION_LANDSCAPE)
+                        .setVideoOptions(VideoOptions.Builder().build())
                         .build())
         if (adType != AdType.AD_DFP_BANNER) {
             loaderBuilder.forUnifiedNativeAd {
