@@ -25,10 +25,9 @@
                 android:id="@+id/ad_tag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/colorAccent"
-                android:textColor="@android:color/white"
                 android:text="@string/ad"
-                android:minWidth="0dp" />
+                style="@style/TextAppearance.AppCompat.Caption"
+                android:textColor="@color/text_secondary_light" />
 
             <TextView
                 android:id="@+id/title"
