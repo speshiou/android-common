@@ -7,6 +7,10 @@ import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import android.view.MotionEvent
+import kotlin.math.abs
+
 
 class ViewUtils() {
     companion object {
@@ -40,6 +44,39 @@ class ViewUtils() {
         fun showSoftKeyboard(view: View) {
             val imm = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+        }
+
+        fun disallowInterceptTouchEvent(recyclerView: RecyclerView) {
+            recyclerView.addOnItemTouchListener(object : RecyclerView.OnItemTouchListener {
+                var startX: Float = -1f
+                var startY: Float = -1f
+                override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+                    val action = e.action
+                    when (action) {
+                        MotionEvent.ACTION_DOWN ->  {
+                            startX = e.x
+                            startY = e.y
+                        }
+                        MotionEvent.ACTION_MOVE -> {
+                            if (abs(e.x - startX) > abs(e.y - startY)) {
+                                rv.parent.requestDisallowInterceptTouchEvent(true)
+                            }
+                        }
+                        MotionEvent.ACTION_UP -> {
+                            rv.parent.requestDisallowInterceptTouchEvent(false)
+                        }
+                    }
+                    return false
+                }
+
+                override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {
+
+                }
+
+                override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {
+
+                }
+            })
         }
     }
 }
