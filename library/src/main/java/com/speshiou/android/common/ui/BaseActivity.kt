@@ -7,12 +7,12 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
-import android.opengl.ETC1.getHeight
 import android.util.TypedValue
 import android.os.Build
 import android.view.View
 import android.view.ViewTreeObserver
 import android.view.ViewGroup
+import com.speshiou.android.common.ui.utils.MediaUtils
 import com.speshiou.android.common.ui.utils.ViewUtils
 import com.speshiou.android.common.ui.widget.OnKeyboardVisibilityListener
 
@@ -33,30 +33,11 @@ open class BaseActivity: AppCompatActivity() {
     }
 
     fun launchImagePicker(requestCode: Int, prompt: String, allowMultiple: Boolean) {
-        val intent = Intent(Intent.ACTION_GET_CONTENT)
-        intent.type = "image/*"
-        if (allowMultiple) {
-            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-        }
-        startActivityForResult(Intent.createChooser(intent, prompt), requestCode)
+        MediaUtils.launchImagePicker(this, requestCode, prompt, allowMultiple)
     }
 
     fun handleImagePickerResult(data: Intent?): Array<Uri> {
-        val uri = data?.data
-        var uris = arrayListOf<Uri>()
-        if (uri == null) {
-            val clipData = data?.clipData
-            if (clipData != null) {
-                for (i in 0 until clipData.itemCount) {
-                    val item = clipData.getItemAt(i)
-                    val uri = item.uri
-                    uris.add(uri)
-                }
-            }
-        } else {
-            uris.add(uri)
-        }
-        return uris.toTypedArray()
+        return MediaUtils.handleImagePickerResult(data)
     }
 
     fun showSoftKeyboard(view: View) {
