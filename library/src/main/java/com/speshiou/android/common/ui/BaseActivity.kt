@@ -32,10 +32,12 @@ open class BaseActivity: AppCompatActivity() {
         }
     }
 
-    fun launchImagePicker(requestCode: Int, prompt: String) {
+    fun launchImagePicker(requestCode: Int, prompt: String, allowMultiple: Boolean) {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "image/*"
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+        if (allowMultiple) {
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+        }
         startActivityForResult(Intent.createChooser(intent, prompt), requestCode)
     }
 
