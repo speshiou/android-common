@@ -100,8 +100,8 @@ class LoadFbNativeAdTask(context: Context, adViewRecycler: AdViewRecycler, val f
         // Set the Text.
         viewHolder.viewAdTag.text = ad.sponsoredTranslation
         viewHolder.textViewTitle.text = ad.advertiserName
-        viewHolder.textViewSubtitle.visibility = if (TextUtils.isEmpty(ad.adSocialContext)) View.GONE else View.VISIBLE
-        viewHolder.textViewSubtitle.text = ad.adSocialContext
+        viewHolder.textViewSubtitle?.visibility = if (TextUtils.isEmpty(ad.adSocialContext)) View.GONE else View.VISIBLE
+        viewHolder.textViewSubtitle?.text = ad.adSocialContext
         viewHolder.textViewBody?.visibility = if (TextUtils.isEmpty(ad.adBodyText)) View.GONE else View.VISIBLE
         viewHolder.textViewBody?.text = ad.adBodyText
         viewHolder.buttonAction.visibility = if (ad.hasCallToAction()) View.VISIBLE else View.GONE

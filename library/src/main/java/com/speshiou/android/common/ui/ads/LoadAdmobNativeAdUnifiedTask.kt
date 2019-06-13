@@ -276,7 +276,7 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
         if (TextUtils.isEmpty(store) && TextUtils.isEmpty(price)) {
 //            adView.findViewById<View>(R.id.secondary_line).visibility = View.GONE
         } else {
-            adView.findViewById<View>(R.id.secondary_line).visibility = View.VISIBLE
+            adView.findViewById<View>(R.id.secondary_line)?.visibility = View.VISIBLE
         }
 
         // Assign native ad object to the native view.
