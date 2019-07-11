@@ -9,13 +9,17 @@ import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
 import android.util.TypedValue
 import android.os.Build
+import android.os.Environment
+import android.provider.MediaStore
 import android.view.View
 import android.view.ViewTreeObserver
 import android.view.ViewGroup
+import androidx.core.content.FileProvider
 import com.speshiou.android.common.ui.utils.MediaUtils
 import com.speshiou.android.common.ui.utils.ViewUtils
 import com.speshiou.android.common.ui.widget.OnKeyboardVisibilityListener
-
+import java.io.File
+import java.io.IOException
 
 
 /**
@@ -30,6 +34,47 @@ open class BaseActivity: AppCompatActivity() {
             }
             else -> return super.onOptionsItemSelected(item)
         }
+    }
+
+    fun launchCameraCapture(requestCode: Int) {
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            takePictureIntent.resolveActivity(packageManager)?.also {
+                val photoFile: File? = try {
+                    createImageFile()
+                } catch (ex: IOException) {
+                    ex.printStackTrace()
+                    null
+                }
+                photoFile?.also {
+                    val photoURI = FileProvider.getUriForFile(
+                            this,
+                            "$packageName.fileprovider",
+                            it
+                    )
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                    startActivityForResult(takePictureIntent, requestCode)
+                }
+            }
+        }
+    }
+
+    private var capturedPhotoFileName: File? = null
+
+    @Throws(IOException::class)
+    private fun createImageFile(): File {
+        // Create an image file name
+        val storageDir: File = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        return File.createTempFile(
+                "JPEG_${System.currentTimeMillis()}_", /* prefix */
+                ".jpg", /* suffix */
+                storageDir /* directory */
+        ).apply {
+            capturedPhotoFileName = this
+        }
+    }
+
+    protected fun getCapturedImageFile(): File? {
+        return capturedPhotoFileName
     }
 
     fun launchImagePicker(requestCode: Int, prompt: String, allowMultiple: Boolean) {
