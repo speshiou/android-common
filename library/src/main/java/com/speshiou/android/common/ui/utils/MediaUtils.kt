@@ -28,16 +28,14 @@ class MediaUtils {
         fun handleImagePickerResult(data: Intent?): Array<Uri> {
             val uri = data?.data
             var uris = arrayListOf<Uri>()
-            if (uri == null) {
-                val clipData = data?.clipData
-                if (clipData != null) {
-                    for (i in 0 until clipData.itemCount) {
-                        val item = clipData.getItemAt(i)
-                        val uri = item.uri
-                        uris.add(uri)
-                    }
+            val clipData = data?.clipData
+            if (clipData != null) {
+                for (i in 0 until clipData.itemCount) {
+                    val item = clipData.getItemAt(i)
+                    val uri = item.uri
+                    uris.add(uri)
                 }
-            } else {
+            } else if (uri != null) {
                 uris.add(uri)
             }
             return uris.toTypedArray()
