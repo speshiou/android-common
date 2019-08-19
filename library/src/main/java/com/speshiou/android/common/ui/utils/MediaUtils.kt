@@ -38,7 +38,7 @@ class MediaUtils {
             } else if (uri != null) {
                 uris.add(uri)
             }
-            return uris.toTypedArray()
+            return uris.sortedBy { it.toString() }.toTypedArray()
         }
     }
 }
