@@ -2,6 +2,9 @@ package com.speshiou.android.common.ui.utils
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.text.Layout
+import android.text.StaticLayout
+import android.text.TextPaint
 import androidx.core.graphics.drawable.DrawableCompat
 import android.view.MenuItem
 import android.view.View
@@ -77,6 +80,25 @@ class ViewUtils() {
 
                 }
             })
+        }
+
+        fun measureTextViewHeight(
+                text: CharSequence,
+                textSize: Int, // in pixels
+                deviceWidth: Int, // in pixels
+                padding: Int // in pixels
+        ): Int {
+            val myTextPaint = TextPaint()
+            myTextPaint.isAntiAlias = true
+            // this is how you would convert sp to pixels based on screen density
+            //myTextPaint.setTextSize(16 * context.getResources().getDisplayMetrics().density);
+            myTextPaint.textSize = textSize.toFloat()
+            val alignment = Layout.Alignment.ALIGN_NORMAL
+            val spacingMultiplier = 1f
+            val spacingAddition = padding.toFloat() // optionally apply padding here
+            val includePadding = padding != 0
+            val myStaticLayout = StaticLayout(text, myTextPaint, deviceWidth, alignment, spacingMultiplier, spacingAddition, includePadding)
+            return myStaticLayout.height
         }
     }
 }
