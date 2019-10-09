@@ -63,7 +63,7 @@ open class BaseActivity: AppCompatActivity() {
     @Throws(IOException::class)
     private fun createImageFile(): File {
         // Create an image file name
-        val storageDir: File = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val storageDir: File = getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
         return File.createTempFile(
                 "JPEG_${System.currentTimeMillis()}_", /* prefix */
                 ".jpg", /* suffix */
