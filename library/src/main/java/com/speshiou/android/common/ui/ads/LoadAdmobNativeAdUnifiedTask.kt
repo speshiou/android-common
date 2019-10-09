@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.google.ads.mediation.facebook.FacebookAdapter
+import com.google.ads.mediation.facebook.FacebookExtras
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
@@ -113,7 +114,8 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
 //            adLoader?.loadAd(AdRequest.Builder()
 //                    .addTestDevice("8A347539F0976701577341ECB483FE19")
 //                    .addTestDevice("F31D20B68A1791570F88B6A627A4182E").build())
-            val extras = FacebookAdapter.FacebookExtrasBundleBuilder()
+            val extras = FacebookExtras()
+                    .setNativeBanner(true)
                     .build()
             adLoader?.loadAds(AdRequest.Builder().addNetworkExtrasBundle(FacebookAdapter::class.java, extras).build(), adCount)
         }
@@ -254,13 +256,6 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
 
         val extras = unifiedNativeAd.extras
         if (extras != null) {
-            if (extras.containsKey(FacebookAdapter.KEY_SUBTITLE_ASSET)) {
-                val text = extras.getString(FacebookAdapter.KEY_SUBTITLE_ASSET)
-                if (title != text) {
-                    adView.bodyView?.visibility = View.VISIBLE
-                    (adView.bodyView as? TextView)?.text = text
-                }
-            }
             if (extras.containsKey(FacebookAdapter.KEY_SOCIAL_CONTEXT_ASSET)) {
                 price = extras.getString(FacebookAdapter.KEY_SOCIAL_CONTEXT_ASSET)
             }
