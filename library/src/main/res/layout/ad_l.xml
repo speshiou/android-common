@@ -87,5 +87,5 @@ android:background="?android:attr/selectableItemBackground">
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:textColor="@android:color/white"
-        android:backgroundTint="@color/primaryColor" />
+        android:backgroundTint="@color/colorSecondary" />
 </LinearLayout>
