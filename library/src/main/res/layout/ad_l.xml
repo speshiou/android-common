@@ -51,7 +51,7 @@ android:background="?android:attr/selectableItemBackground">
             android:id="@+id/ad_tag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/colorAccent"
+            android:background="@color/colorSecondary"
             android:textColor="@android:color/white"
             android:text="@string/ad"
             android:minWidth="0dp" />
@@ -87,5 +87,5 @@ android:background="?android:attr/selectableItemBackground">
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:textColor="@android:color/white"
-        android:backgroundTint="@color/colorPrimary" />
+        android:backgroundTint="@color/primaryColor" />
 </LinearLayout>

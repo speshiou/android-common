@@ -76,7 +76,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:textColor="@android:color/white"
-                android:backgroundTint="@color/colorAccent"
+                android:backgroundTint="@color/colorSecondary"
                 android:layout_marginLeft="@dimen/margin_l"/>
         </LinearLayout>
 

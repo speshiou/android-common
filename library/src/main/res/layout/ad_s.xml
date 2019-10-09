@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/ad"
                 style="@style/TextAppearance.AppCompat.Caption"
-                android:background="@color/colorAccent"
+                android:background="@color/colorSecondary"
                 android:textColor="@android:color/white"/>
             <TextView
                 android:id="@+id/title"
