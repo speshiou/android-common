@@ -21,6 +21,7 @@ abstract class EnhancedRecyclerAdapter<T> : androidx.recyclerview.widget.Recycle
     private var mLoadMoreBundle: Bundle? = null
     private var mLoadingMore = false
 
+    var preloadAdAhead = 5
     var selectionEnabled = true
 
     var selectedItem: Int by Delegates.observable(-1) {
@@ -115,14 +116,14 @@ abstract class EnhancedRecyclerAdapter<T> : androidx.recyclerview.widget.Recycle
             }
 
             val adPreloadStart = when {
-                position < PRELOAD_AD_AHEAD -> {
+                position < preloadAdAhead -> {
                     position + 1
                 }
                 else -> {
-                    position + PRELOAD_AD_AHEAD - 1
+                    position + preloadAdAhead - 1
                 }
             }
-            for (adPos in adPreloadStart until position + PRELOAD_AD_AHEAD) {
+            for (adPos in adPreloadStart until position + preloadAdAhead) {
                 if (adPos >= 0 && adPos < mData.size) {
                     val obj = mData[adPos]
                     if (obj is LoadAdTask) {
@@ -180,6 +181,5 @@ abstract class EnhancedRecyclerAdapter<T> : androidx.recyclerview.widget.Recycle
         const val VIEW_TYPE_LOAD_MORE = -1
         const val VIEW_TYPE_DATA = -2
         const val PRELOAD_MORE_AHEAD = 30
-        const val PRELOAD_AD_AHEAD = 10
     }
 }
