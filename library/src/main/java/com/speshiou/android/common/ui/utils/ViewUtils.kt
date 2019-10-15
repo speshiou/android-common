@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable
 import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
+import android.util.TypedValue
 import androidx.core.graphics.drawable.DrawableCompat
 import android.view.MenuItem
 import android.view.View
@@ -17,6 +18,15 @@ import kotlin.math.abs
 
 class ViewUtils() {
     companion object {
+        fun getStyledColor(context: Context, attrId: Int): Int {
+            val typedValue = TypedValue()
+
+            val a = context.obtainStyledAttributes(typedValue.data, intArrayOf(attrId))
+            val color = a.getColor(0, 0)
+            a.recycle()
+            return color
+        }
+
         fun tintMenuItem(menuItem: MenuItem, color: Int) {
             menuItem.icon = tintDrawable(menuItem.icon, color)
         }
