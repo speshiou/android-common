@@ -180,6 +180,6 @@ abstract class EnhancedRecyclerAdapter<T> : androidx.recyclerview.widget.Recycle
     companion object {
         const val VIEW_TYPE_LOAD_MORE = -1
         const val VIEW_TYPE_DATA = -2
-        const val PRELOAD_MORE_AHEAD = 30
+        const val PRELOAD_MORE_AHEAD = 20
     }
 }
