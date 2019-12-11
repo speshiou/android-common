@@ -13,9 +13,29 @@ class EmptyView(context: Context, attrs: AttributeSet): FrameLayout(context, att
     init {
         LayoutInflater.from(context).inflate(R.layout.empty_view, this, true)
         action_button.visibility = View.GONE
+
+        init(context, attrs)
     }
 
-    var text: String by Delegates.observable("") {
+    private fun init(context: Context, attrs: AttributeSet?) {
+        if (attrs != null) {
+            val a = context.theme.obtainStyledAttributes(
+                    attrs,
+                    R.styleable.EmptyView,
+                    0, 0
+            )
+            try {
+                val d = a.getDrawable(R.styleable.EmptyView_emptyIcon)
+                icon.setImageDrawable(d)
+                val text = a.getString(R.styleable.EmptyView_emptyText)
+                prompt_text.text = text
+            } finally { // release the TypedArray so that it can be reused.
+                a.recycle()
+            }
+        }
+    }
+
+    var text: CharSequence by Delegates.observable<CharSequence>("") {
         property, oldValue, newValue ->
         prompt_text.text = newValue
     }

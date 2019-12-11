@@ -1,6 +1,5 @@
 package com.speshiou.android.common.ui.widget
 
-import android.content.Context
 import android.os.Bundle
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
@@ -14,7 +13,7 @@ import kotlin.properties.Delegates
 /**
  * Created by joey on 2017/12/27.
  */
-abstract class EnhancedRecyclerAdapter<T> : androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>() {
+abstract class EnhancedRecyclerAdapter<T> : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     protected var mData = ArrayList<T>()
     private var mHasMoreData = false
@@ -52,48 +51,46 @@ abstract class EnhancedRecyclerAdapter<T> : androidx.recyclerview.widget.Recycle
 
     var onLoadMoreListener: ((data: Bundle?) -> Unit)? = null
 
-    private var mRecyclerView: androidx.recyclerview.widget.RecyclerView? = null
+    private var mRecyclerView: RecyclerView? = null
     var emptyView by Delegates.observable<View?>(null) {
         property, oldValue, newValue ->
 
         if (newValue != null) {
-            registerAdapterDataObserver(object: androidx.recyclerview.widget.RecyclerView.AdapterDataObserver() {
+            registerAdapterDataObserver(object: RecyclerView.AdapterDataObserver() {
                 override fun onChanged() {
                     super.onChanged()
                     if (itemCount > 0) {
-                        newValue?.visibility = View.GONE
-                        mRecyclerView?.visibility = View.VISIBLE
+                        newValue.visibility = View.GONE
                     } else {
-                        mRecyclerView?.visibility = View.GONE
-                        newValue?.visibility = View.VISIBLE
+                        newValue.visibility = View.VISIBLE
                     }
                 }
             })
         }
     }
 
-    override fun onAttachedToRecyclerView(recyclerView: androidx.recyclerview.widget.RecyclerView) {
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         mRecyclerView = recyclerView
     }
 
-    override fun onDetachedFromRecyclerView(recyclerView: androidx.recyclerview.widget.RecyclerView) {
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
         super.onDetachedFromRecyclerView(recyclerView)
         mRecyclerView = null
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): androidx.recyclerview.widget.RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if (viewType == VIEW_TYPE_LOAD_MORE) {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.list_item_more, parent, false)
-            return object: androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {}
+            return object: RecyclerView.ViewHolder(view) {}
         } else {
             return onCreateDataViewHolder(parent, viewType)
         }
     }
 
-    abstract fun onCreateDataViewHolder(parent: ViewGroup, viewType: Int): androidx.recyclerview.widget.RecyclerView.ViewHolder
+    abstract fun onCreateDataViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder
 
-    override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val viewType = getItemViewType(position)
         if (viewType == VIEW_TYPE_LOAD_MORE) {
             if (mHasMoreData && !mLoadingMore) {
@@ -134,7 +131,7 @@ abstract class EnhancedRecyclerAdapter<T> : androidx.recyclerview.widget.Recycle
         }
     }
 
-    abstract fun onBindDataViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int)
+    abstract fun onBindDataViewHolder(holder: RecyclerView.ViewHolder, position: Int)
 
     fun getItem(position: Int): T? {
         if (position < mData.size) {
