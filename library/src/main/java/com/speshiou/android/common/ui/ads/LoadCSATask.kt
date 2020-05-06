@@ -3,11 +3,9 @@ package com.speshiou.android.common.ui.ads
 import android.content.Context
 import android.text.TextUtils
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.search.DynamicHeightSearchAdRequest
 import com.google.android.gms.ads.search.SearchAdView
-import com.speshiou.android.common.R
 
 /**
  * Created by joey on 2018/1/10.
@@ -76,16 +74,16 @@ class LoadCSATask(context: Context, adViewRecycler: AdViewRecycler, adType: Stri
 
     public override fun attachAdView(adContainer: ViewGroup) {
         super.attachAdView(adContainer)
-        val builder = DynamicHeightSearchAdRequest.Builder()
-        builder.setQuery(keyword)
-        builder.setChannel(channelId)
-        builder.setNumber(1)
-        if (page > 0) {
-            builder.setPage(page)
-        }
-        builder.setAdvancedOptionValue("csa_styleId", styleId)     // Equivalent to "width" CSA parameter
         searchAdView?.let {
             adContainer.addView(it)
+            val builder = DynamicHeightSearchAdRequest.Builder()
+            builder.setQuery(keyword)
+            builder.setChannel(channelId)
+            builder.setNumber(1)
+            if (page > 0) {
+                builder.setPage(page)
+            }
+            builder.setAdvancedOptionValue("csa_styleId", styleId)
             it.loadAd(builder.build())
         }
     }
