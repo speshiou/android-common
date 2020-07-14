@@ -51,16 +51,8 @@ class AdViewRecycler(private val mContext: Context) {
             tasks = ArrayList()
             mLoadAdTaskMap[adType] = tasks
         }
-        var reusedTask: LoadAdTask? = null
-        for (task in tasks) {
-            if (task.mUnitId == unitId) {
-                reusedTask = task
-                break
-            }
-        }
-        if (reusedTask == null) {
-            reusedTask = createLoadAdTask(adType, unitId)
-        } else {
+        val reusedTask = tasks.firstOrNull { it.mUnitId == unitId } ?: createLoadAdTask(adType, unitId)
+        if (reusedTask != null) {
             tasks.remove(reusedTask)
         }
         reusedTask?.setRefreshRate(refreshRate)
