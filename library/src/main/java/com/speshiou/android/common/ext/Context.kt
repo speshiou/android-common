@@ -17,7 +17,7 @@ import android.content.res.Configuration.UI_MODE_NIGHT_MASK
 fun Context.getStyledColor(@AttrRes attrId: Int): Int {
     val resolvedAttr = TypedValue()
     this.theme.resolveAttribute(attrId, resolvedAttr, true)
-    val colorRes = resolvedAttr.run { if (resourceId != 0) resourceId else data } // resource id ColorStateList
+    val colorRes = if (resolvedAttr.resourceId != 0) resolvedAttr.resourceId else resolvedAttr.data
     return ContextCompat.getColor(this, colorRes)
 }
 

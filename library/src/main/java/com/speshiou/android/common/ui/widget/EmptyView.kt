@@ -43,7 +43,10 @@ class EmptyView(context: Context, attrs: AttributeSet): FrameLayout(context, att
     var iconResId: Int by Delegates.observable(-1) {
         property, oldValue, newValue ->
         if (newValue > 0) {
+            icon.visibility = View.VISIBLE
             icon.setImageResource(iconResId)
+        } else {
+            icon.visibility = View.GONE
         }
     }
 
