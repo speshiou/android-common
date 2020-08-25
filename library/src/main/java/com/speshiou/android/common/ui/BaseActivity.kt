@@ -7,17 +7,17 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.Rect
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
-import android.view.MenuItem
-import android.view.inputmethod.InputMethodManager
-import android.util.TypedValue
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.TypedValue
+import android.view.MenuItem
 import android.view.View
-import android.view.ViewTreeObserver
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
+import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import com.speshiou.android.common.R
 import com.speshiou.android.common.ui.utils.MediaUtils
@@ -121,11 +121,9 @@ open class BaseActivity: AppCompatActivity() {
     }
 
     fun hideSoftInput() {
-        val view = currentFocus
-        if (view != null) {
-            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-            imm?.hideSoftInputFromWindow(view.windowToken, 0)
-        }
+        val view = currentFocus ?: findViewById<View>(android.R.id.content).getRootView()
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        imm?.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     fun setKeyboardVisibilityListener(onKeyboardVisibilityListener: OnKeyboardVisibilityListener) {
@@ -150,5 +148,14 @@ open class BaseActivity: AppCompatActivity() {
                 onKeyboardVisibilityListener.onKeyboardVisibilityChanged(isShown)
             }
         })
+    }
+
+    fun setKeyboardSizeChangedListener(onKeyboardVisibilityListener: (size: Rect) -> Unit) {
+        val rootWindow = window
+        rootWindow?.getDecorView()?.findViewById<View>(android.R.id.content)?.viewTreeObserver?.addOnGlobalLayoutListener {
+            val r = Rect()
+            rootWindow?.getDecorView()?.getWindowVisibleDisplayFrame(r)
+            onKeyboardVisibilityListener.invoke(r)
+        }
     }
 }
