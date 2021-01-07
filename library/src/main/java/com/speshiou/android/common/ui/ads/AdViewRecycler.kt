@@ -16,8 +16,7 @@ class AdViewRecycler(private val mContext: Context) {
     var adViewWidth = -1
     var bannerAdSizes = arrayOf(AdSize.LARGE_BANNER)
     var keyword: String? = null
-    private var mNativeAdLayoutResId = R.layout.ad_s
-    var admobUnifiedAdLayoutResId = R.layout.admob_ad_unified
+    var gmaNativeAdLayoutResId = R.layout.admob_ad_unified
     var fbNativeAdLayoutResId = R.layout.ad_fb_native
     var fbNativeBannerAdLayoutResId = R.layout.ad_fb_native_banner
 
@@ -94,10 +93,9 @@ class AdViewRecycler(private val mContext: Context) {
         if (adView == null) {
             var layoutId = -1
             when (adViewType) {
-                AdViewType.AD_NATIVE -> layoutId = mNativeAdLayoutResId
+                AdViewType.AD_GMA_NATIVE -> layoutId = gmaNativeAdLayoutResId
                 AdViewType.AD_FB_NATIVE -> layoutId = fbNativeAdLayoutResId
                 AdViewType.AD_FB_NATIVE_BANNER -> layoutId = fbNativeBannerAdLayoutResId
-                AdViewType.AD_ADMOB_UNIFIED -> layoutId = admobUnifiedAdLayoutResId
             }
             if (layoutId != -1) {
                 adView = LayoutInflater.from(context).inflate(layoutId, null, false)

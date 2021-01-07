@@ -129,7 +129,7 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
         var adView: View? = null
         if (unifiedNativeAd != null) {
             adContainer.removeAllViews()
-            val unifiedNativeAdView = mAdViewRecycler.obtainAdView(mContext, AdViewType.AD_ADMOB_UNIFIED) as? UnifiedNativeAdView
+            val unifiedNativeAdView = mAdViewRecycler.obtainAdView(mContext, AdViewType.AD_GMA_NATIVE) as? UnifiedNativeAdView
             if (unifiedNativeAdView != null) {
                 populateAdView(unifiedNativeAd, unifiedNativeAdView)
                 adView = unifiedNativeAdView
@@ -158,7 +158,7 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
 
     protected fun populateAdView(unifiedNativeAd: UnifiedNativeAd,
                                            adView: UnifiedNativeAdView) {
-        adView.id = AdViewType.AD_ADMOB_UNIFIED
+        adView.id = AdViewType.AD_GMA_NATIVE
         // Get the video controller for the ad. One will always be provided, even if the ad doesn't
         // have a video asset.
         //                VideoController vc = nativeAppInstallAd.getVideoController();
