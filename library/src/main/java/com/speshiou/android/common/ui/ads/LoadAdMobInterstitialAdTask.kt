@@ -4,6 +4,7 @@ import android.content.Context
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
+import com.google.android.gms.ads.LoadAdError
 
 class LoadAdMobInterstitialAdTask(context: Context, adType: String, adId: String): LoadInterstitialAdTask(context, adType, adId) {
     private var interstitialAd: InterstitialAd? = null
@@ -38,7 +39,7 @@ class LoadAdMobInterstitialAdTask(context: Context, adType: String, adId: String
                 listener?.onAdLoaded()
             }
 
-            override fun onAdFailedToLoad(p0: Int) {
+            override fun onAdFailedToLoad(p0: LoadAdError?) {
                 super.onAdFailedToLoad(p0)
                 listener?.onError()
             }

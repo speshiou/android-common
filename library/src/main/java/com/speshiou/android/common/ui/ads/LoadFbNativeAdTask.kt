@@ -17,8 +17,8 @@ class LoadFbNativeAdTask(context: Context, adViewRecycler: AdViewRecycler, val f
     override fun onLoad() {
         super.onLoad()
         val nativeAd: NativeAdBase = when (this.adType) {
-            AdType.AD_FB_NATIVE -> NativeAd(mContext, mUnitId)
-            else -> NativeBannerAd(mContext, mUnitId)
+            AdType.AD_FB_NATIVE -> NativeAd(context, unitId)
+            else -> NativeBannerAd(context, unitId)
         }
         nativeAd.setAdListener(object : NativeAdListener {
 
@@ -36,7 +36,7 @@ class LoadFbNativeAdTask(context: Context, adViewRecycler: AdViewRecycler, val f
 
                 val bundle = Bundle()
                 bundle.putString("ad_type", fbAdType)
-                bundle.putString("ad_id", mUnitId)
+                bundle.putString("ad_id", unitId)
                 bundle.putString("ad_error_code", error.errorCode.toString())
                 BaseApplication.firebaseAnalytics?.logEvent("ad_error", bundle)
             }
@@ -52,11 +52,11 @@ class LoadFbNativeAdTask(context: Context, adViewRecycler: AdViewRecycler, val f
             }
 
             override fun onAdClicked(ad: Ad) {
-                AdCompat.logClickEvent(adType, mUnitId)
+                AdCompat.logClickEvent(adType, unitId)
             }
 
             override fun onLoggingImpression(ad: Ad) {
-                AdCompat.logImpressionEvent(adType, mUnitId)
+                AdCompat.logImpressionEvent(adType, unitId)
             }
         })
 
@@ -88,7 +88,7 @@ class LoadFbNativeAdTask(context: Context, adViewRecycler: AdViewRecycler, val f
                 AdViewType.AD_FB_NATIVE_BANNER
             }
         }
-        val adView = mAdViewRecycler.obtainAdView(mContext, adViewType) ?: return
+        val adView = adViewRecycler.obtainAdView(context, adViewType) ?: return
         ad.unregisterView()
 
 
@@ -99,7 +99,7 @@ class LoadFbNativeAdTask(context: Context, adViewRecycler: AdViewRecycler, val f
         val nativeAdMedia = adView.findViewById<MediaView>(R.id.media)
         // Set the Text.
         viewHolder.viewAdTag.text = ad.sponsoredTranslation
-        viewHolder.textViewTitle.text = ad.advertiserName
+        viewHolder.textViewTitle?.text = ad.advertiserName
         viewHolder.textViewSubtitle?.visibility = if (TextUtils.isEmpty(ad.adSocialContext)) View.GONE else View.VISIBLE
         viewHolder.textViewSubtitle?.text = ad.adSocialContext
         viewHolder.textViewBody?.visibility = if (TextUtils.isEmpty(ad.adBodyText)) View.GONE else View.VISIBLE
@@ -108,7 +108,7 @@ class LoadFbNativeAdTask(context: Context, adViewRecycler: AdViewRecycler, val f
         viewHolder.buttonAction.text = ad.adCallToAction
 
         // Add the AdOptionsView
-        val adOptionsView = AdOptionsView(mContext, ad, adView.findViewById(R.id.native_ad_layout))
+        val adOptionsView = AdOptionsView(context, ad, adView.findViewById(R.id.native_ad_layout))
         viewHolder.adOptionsPlaceHolder.removeAllViews()
         viewHolder.adOptionsPlaceHolder.addView(adOptionsView)
 

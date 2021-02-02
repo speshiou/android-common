@@ -56,7 +56,7 @@ class AdUtils {
             if (adTask != null) {
                 if (adTask is LoadCSATask) {
                     adTask.page = index + 1
-                } else if (adTask is LoadAdmobNativeAdUnifiedTask) {
+                } else if (adTask is LoadGoogleAdsNativeAdUnifiedTask) {
                     adTask.adCount = totalAds
                 }
             }

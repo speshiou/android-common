@@ -25,7 +25,7 @@ class LoadAFSNativeAdTask(context: Context, adViewRecycler: AdViewRecycler, adTy
             return
         }
 
-        val unitIds = mUnitId.split("/")
+        val unitIds = unitId.split("/")
         val clientId = unitIds[0]
         val channelId = unitIds[1]
         val styleId = unitIds[2]
@@ -60,11 +60,11 @@ class LoadAFSNativeAdTask(context: Context, adViewRecycler: AdViewRecycler, adTy
 
             override fun onAdLeftApplication() {
                 super.onAdLeftApplication()
-                AdCompat.logClickEvent(adType, mUnitId)
+                AdCompat.logClickEvent(adType, unitId)
             }
         }
 
-        adController = SearchAdController(mContext, clientId, styleId,
+        adController = SearchAdController(context, clientId, styleId,
                 adOptionsBuilder.build(), adListener)
         val requestBuilder = SearchAdRequest.Builder()
         requestBuilder.setQuery(keyword)

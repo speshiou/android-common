@@ -7,60 +7,61 @@ import android.view.ViewGroup
 import android.widget.*
 import com.google.ads.mediation.facebook.FacebookAdapter
 import com.google.ads.mediation.facebook.FacebookExtras
-import com.google.android.gms.ads.AdLoader
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.VideoOptions
-import com.google.android.gms.ads.doubleclick.PublisherAdRequest
-import com.google.android.gms.ads.doubleclick.PublisherAdView
-import com.google.android.gms.ads.formats.*
+import com.google.android.gms.ads.*
+import com.google.android.gms.ads.admanager.AdManagerAdRequest
+import com.google.android.gms.ads.admanager.AdManagerAdView
+import com.google.android.gms.ads.formats.AdManagerAdViewOptions
+import com.google.android.gms.ads.formats.OnAdManagerAdViewLoadedListener
+import com.google.android.gms.ads.nativead.NativeAd
+import com.google.android.gms.ads.nativead.NativeAdOptions
+import com.google.android.gms.ads.nativead.NativeAdView
 import com.speshiou.android.common.R
 
-class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecycler, adType: String, unitId: String, private vararg val bannerAdSizes: AdSize) : LoadAdTask(context, adViewRecycler, adType, unitId) {
+class LoadGoogleAdsNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecycler, adType: String, unitId: String, private vararg val bannerAdSizes: AdSize) : LoadAdTask(context, adViewRecycler, adType, unitId) {
 
-    private var adLoader: AdLoader? = null
-    private var mUnifiedNativeAd: UnifiedNativeAd? = null
-    private var mPublisherAdView: PublisherAdView? = null
-    private var mUnifiedNativeAds = arrayListOf<UnifiedNativeAd>()
+    private var _adLoader: AdLoader? = null
+    private var _nativeAd: NativeAd? = null
+    private var _adManagerAdView: AdManagerAdView? = null
+    private var _nativeAds = arrayListOf<NativeAd>()
 
     var adCount = 1
 
     private fun clearAds() {
-        mPublisherAdView?.destroy()
-        mPublisherAdView = null
-        mUnifiedNativeAd?.destroy()
-        mUnifiedNativeAd = null
-        for (ad in mUnifiedNativeAds) {
+        _adManagerAdView?.destroy()
+        _adManagerAdView = null
+        _nativeAd?.destroy()
+        _nativeAd = null
+        for (ad in _nativeAds) {
             ad.destroy()
         }
-        mUnifiedNativeAds.clear()
+        _nativeAds.clear()
     }
 
     public override fun onLoad() {
         super.onLoad()
-        if (adLoader?.isLoading == true) {
+        if (_adLoader?.isLoading == true) {
             return
         }
-        if (adLoader != null) {
+        if (_adLoader != null) {
             performLoader()
             return
         }
 
-        val loaderBuilder = AdLoader.Builder(mContext, mUnitId)
+        val loaderBuilder = AdLoader.Builder(context, unitId)
                 .withAdListener(object : com.google.android.gms.ads.AdListener() {
                     override fun onAdImpression() {
                         super.onAdImpression()
-                        AdCompat.logImpressionEvent(adType, mUnitId)
+                        AdCompat.logImpressionEvent(adType, unitId)
                     }
 
                     override fun onAdClicked() {
                         super.onAdClicked()
-                        AdCompat.logClickEvent(adType, mUnitId)
+                        AdCompat.logClickEvent(adType, unitId)
                     }
 
-                    override fun onAdFailedToLoad(errorCode: Int) {
-//                        Log.e("joey", "onAdFailedToLoad $errorCode")
-                        if (mUnifiedNativeAd != null || mPublisherAdView != null) {
+                    override fun onAdFailedToLoad(p0: LoadAdError?) {
+                        super.onAdFailedToLoad(p0)
+                        if (_nativeAd != null || _adManagerAdView != null) {
                             onLoaded()
                         } else {
                             onFailedToLoad()
@@ -70,35 +71,31 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
                 .withNativeAdOptions(NativeAdOptions.Builder()
                         // Methods in the NativeAdOptions.Builder class can be
                         // used here to specify individual options settings.
-                        .setImageOrientation(NativeAdOptions.ORIENTATION_LANDSCAPE)
+                        .setMediaAspectRatio(NativeAdOptions.NATIVE_MEDIA_ASPECT_RATIO_LANDSCAPE)
                         .setVideoOptions(VideoOptions.Builder().build())
                         .build())
         if (adType != AdType.AD_DFP_BANNER) {
-            loaderBuilder.forUnifiedNativeAd {
-                unifiedNativeAd ->
+            loaderBuilder.forNativeAd {
                 if (adType == AdType.AD_ADMOB_NATIVE) {
-                    mUnifiedNativeAds.add(unifiedNativeAd)
+                    _nativeAds.add(it)
                 } else {
                     clearAds()
-                    mUnifiedNativeAd = unifiedNativeAd
+                    _nativeAd = it
                 }
                 onLoaded()
             }
         }
         if (bannerAdSizes.isNotEmpty()) {
-            loaderBuilder.forPublisherAdView(object : OnPublisherAdViewLoadedListener {
-                override fun onPublisherAdViewLoaded(publisherAdView: PublisherAdView?) {
-                    clearAds()
-                    mPublisherAdView = publisherAdView
-                    onLoaded()
-                }
-
+            loaderBuilder.forAdManagerAdView(OnAdManagerAdViewLoadedListener {
+                clearAds()
+                _adManagerAdView = it
+                onLoaded()
             }, *bannerAdSizes)
         }
         if (adType == AdType.AD_DFP || adType == AdType.AD_DFP_BANNER) {
-            loaderBuilder.withPublisherAdViewOptions(PublisherAdViewOptions.Builder().build())
+            loaderBuilder.withAdManagerAdViewOptions(AdManagerAdViewOptions.Builder().build())
         }
-        adLoader = loaderBuilder.build()
+        _adLoader = loaderBuilder.build()
 
         performLoader()
     }
@@ -109,7 +106,7 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
 //            adLoader?.loadAd(PublisherAdRequest.Builder()
 //                    .addTestDevice("8A347539F0976701577341ECB483FE19")
 //                    .addTestDevice("F31D20B68A1791570F88B6A627A4182E").build())
-            adLoader?.loadAd(PublisherAdRequest.Builder().build())
+            _adLoader?.loadAd(AdManagerAdRequest.Builder().build())
         } else {
 //            adLoader?.loadAd(AdRequest.Builder()
 //                    .addTestDevice("8A347539F0976701577341ECB483FE19")
@@ -117,7 +114,7 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
             val extras = FacebookExtras()
                     .setNativeBanner(true)
                     .build()
-            adLoader?.loadAds(AdRequest.Builder().addNetworkExtrasBundle(FacebookAdapter::class.java, extras).build(), adCount)
+            _adLoader?.loadAds(AdRequest.Builder().addNetworkExtrasBundle(FacebookAdapter::class.java, extras).build(), adCount)
         }
     }
 
@@ -125,11 +122,11 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
         super.attachAdView(adContainer, index)
 
         val unifiedNativeAd = getUnifiedNativeAd(index)
-        val publisherAdView = mPublisherAdView
+        val publisherAdView = _adManagerAdView
         var adView: View? = null
         if (unifiedNativeAd != null) {
             adContainer.removeAllViews()
-            val unifiedNativeAdView = mAdViewRecycler.obtainAdView(mContext, AdViewType.AD_GMA_NATIVE) as? UnifiedNativeAdView
+            val unifiedNativeAdView = adViewRecycler.obtainAdView(context, AdViewType.AD_GMA_NATIVE) as? NativeAdView
             if (unifiedNativeAdView != null) {
                 populateAdView(unifiedNativeAd, unifiedNativeAdView)
                 adView = unifiedNativeAdView
@@ -145,19 +142,19 @@ class LoadAdmobNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecyc
         }
     }
 
-    private fun getUnifiedNativeAd(index: Int): UnifiedNativeAd? {
+    private fun getUnifiedNativeAd(index: Int): NativeAd? {
         if (adType == AdType.AD_ADMOB_NATIVE) {
-            if (index < mUnifiedNativeAds.size && index >= 0) {
-                return mUnifiedNativeAds[index]
+            if (index < _nativeAds.size && index >= 0) {
+                return _nativeAds[index]
             }
         } else {
-            return mUnifiedNativeAd
+            return _nativeAd
         }
         return null
     }
 
-    protected fun populateAdView(unifiedNativeAd: UnifiedNativeAd,
-                                           adView: UnifiedNativeAdView) {
+    protected fun populateAdView(unifiedNativeAd: NativeAd,
+                                           adView: NativeAdView) {
         adView.id = AdViewType.AD_GMA_NATIVE
         // Get the video controller for the ad. One will always be provided, even if the ad doesn't
         // have a video asset.

@@ -3,28 +3,29 @@ package com.speshiou.android.common.ui.ads
 import android.content.Context
 import android.view.ViewGroup
 import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.doubleclick.PublisherAdRequest
-import com.google.android.gms.ads.doubleclick.PublisherAdView
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.admanager.AdManagerAdRequest
+import com.google.android.gms.ads.admanager.AdManagerAdView
 
 class LoadDfpBannerTask(context: Context, adViewRecycler: AdViewRecycler, adType: String, unitId: String, val adViewWidth: Int, private vararg val bannerAdSizes: AdSize) : LoadAdTask(context, adViewRecycler, adType, unitId) {
 
-    private var mPublisherAdView: PublisherAdView? = null
+    private var _adManagerAdView: AdManagerAdView? = null
 
     public override fun onLoad() {
         super.onLoad()
-        if (bannerAdSizes.isEmpty() || mPublisherAdView != null || adViewWidth <= 0) {
+        if (bannerAdSizes.isEmpty() || _adManagerAdView != null || adViewWidth <= 0) {
             return
         }
 
-        val publisherAdView = PublisherAdView(mContext)
+        val publisherAdView = AdManagerAdView(context)
         publisherAdView.layoutParams = ViewGroup.LayoutParams(adViewWidth, ViewGroup.LayoutParams.WRAP_CONTENT)
         publisherAdView.setAdSizes(*bannerAdSizes)
-        publisherAdView.adUnitId = mUnitId
+        publisherAdView.adUnitId = unitId
 
         publisherAdView.adListener = object : com.google.android.gms.ads.AdListener() {
-            override fun onAdFailedToLoad(errorCode: Int) {
-                super.onAdFailedToLoad(errorCode)
-                if (mPublisherAdView != null) {
+            override fun onAdFailedToLoad(p0: LoadAdError?) {
+                super.onAdFailedToLoad(p0)
+                if (_adManagerAdView != null) {
                     onLoaded()
                 } else {
                     onFailedToLoad()
@@ -33,34 +34,34 @@ class LoadDfpBannerTask(context: Context, adViewRecycler: AdViewRecycler, adType
 
             override fun onAdLoaded() {
                 super.onAdLoaded()
-                if (mPublisherAdView != null) {
-                    mPublisherAdView?.destroy()
+                if (_adManagerAdView != null) {
+                    _adManagerAdView?.destroy()
                 }
 
-                mPublisherAdView = publisherAdView
+                _adManagerAdView = publisherAdView
                 onLoaded()
             }
 
             override fun onAdImpression() {
                 super.onAdImpression()
-                AdCompat.logImpressionEvent(adType, mUnitId)
+                AdCompat.logImpressionEvent(adType, unitId)
             }
 
             override fun onAdClicked() {
                 super.onAdClicked()
-                AdCompat.logClickEvent(adType, mUnitId)
+                AdCompat.logClickEvent(adType, unitId)
             }
         }
-        publisherAdView.loadAd(PublisherAdRequest.Builder().build())
+        publisherAdView.loadAd(AdManagerAdRequest.Builder().build())
     }
 
     public override fun attachAdView(adContainer: ViewGroup) {
         super.attachAdView(adContainer)
-        if (mPublisherAdView == null) {
+        if (_adManagerAdView == null) {
             return
         }
 
-        val adView = mPublisherAdView
+        val adView = _adManagerAdView
         if (adView != null) {
             if (adView.parent != null && adView.parent is ViewGroup) {
                 (adView.parent as ViewGroup).removeView(adView)
@@ -71,6 +72,6 @@ class LoadDfpBannerTask(context: Context, adViewRecycler: AdViewRecycler, adType
 
     override fun recycle() {
         super.recycle()
-        mPublisherAdView?.destroy()
+        _adManagerAdView?.destroy()
     }
 }

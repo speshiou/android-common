@@ -4,6 +4,7 @@ import android.content.Context
 import android.text.TextUtils
 import android.view.ViewGroup
 import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.search.DynamicHeightSearchAdRequest
 import com.google.android.gms.ads.search.SearchAdView
 
@@ -27,17 +28,18 @@ class LoadCSATask(context: Context, adViewRecycler: AdViewRecycler, adType: Stri
         }
 
         if (searchAdView == null) {
-            searchAdView = SearchAdView(mContext)
+            searchAdView = SearchAdView(context)
             searchAdView?.adSize = AdSize.SEARCH
-            val unitIds = mUnitId.split("/")
+            val unitIds = unitId.split("/")
             clientId = unitIds[0]
             channelId = unitIds[1]
             styleId = unitIds[2]
             searchAdView?.adUnitId = clientId
 
             searchAdView?.adListener = object : com.google.android.gms.ads.AdListener() {
-                override fun onAdFailedToLoad(errorCode: Int) {
-                    super.onAdFailedToLoad(errorCode)
+
+                override fun onAdFailedToLoad(p0: LoadAdError?) {
+                    super.onAdFailedToLoad(p0)
 //                if (mSearchAdView != null) {
 //                    onLoaded()
 //                } else {
@@ -59,12 +61,12 @@ class LoadCSATask(context: Context, adViewRecycler: AdViewRecycler, adType: Stri
 
                 override fun onAdClicked() {
                     super.onAdClicked()
-                    AdCompat.logClickEvent(adType, mUnitId)
+                    AdCompat.logClickEvent(adType, unitId)
                 }
 
                 override fun onAdImpression() {
                     super.onAdImpression()
-                    AdCompat.logImpressionEvent(adType, mUnitId)
+                    AdCompat.logImpressionEvent(adType, unitId)
                 }
             }
         }

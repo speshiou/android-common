@@ -33,11 +33,11 @@ class AdViewRecycler(private val mContext: Context) {
         } else if (adType == AdType.AD_FB_NATIVE_BANNER) {
             task = LoadFbNativeAdTask(mContext, this, adType, unitId)
         } else if (adType == AdType.AD_DFP || (adType == AdType.AD_DFP_BANNER && !bannerAdSizes.contains(AdSize.FLUID))) {
-            task = LoadAdmobNativeAdUnifiedTask(mContext, this, adType, unitId, *bannerAdSizes)
+            task = LoadGoogleAdsNativeAdUnifiedTask(mContext, this, adType, unitId, *bannerAdSizes)
         } else if (adType == AdType.AD_DFP || adType == AdType.AD_DFP_BANNER) {
             task = LoadDfpBannerTask(mContext, this, adType, unitId, adViewWidth, *bannerAdSizes)
         } else if (adType == AdType.AD_ADMOB_NATIVE) {
-            task = LoadAdmobNativeAdUnifiedTask(mContext, this, adType, unitId)
+            task = LoadGoogleAdsNativeAdUnifiedTask(mContext, this, adType, unitId)
         } else if (adType == AdType.AD_CSA) {
             task = LoadCSATask(mContext, this, adType, unitId, keyword)
         }
@@ -50,7 +50,7 @@ class AdViewRecycler(private val mContext: Context) {
             tasks = ArrayList()
             mLoadAdTaskMap[adType] = tasks
         }
-        val reusedTask = tasks.firstOrNull { it.mUnitId == unitId } ?: createLoadAdTask(adType, unitId)
+        val reusedTask = tasks.firstOrNull { it.unitId == unitId } ?: createLoadAdTask(adType, unitId)
         if (reusedTask != null) {
             tasks.remove(reusedTask)
         }

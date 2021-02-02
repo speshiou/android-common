@@ -2,6 +2,7 @@ package com.speshiou.android.common.ui.ads
 
 import android.content.Context
 import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest
 import com.google.android.gms.ads.doubleclick.PublisherInterstitialAd
 
@@ -38,7 +39,7 @@ class LoadDfpInterstitialAdTask(context: Context, adType: String, adId: String):
                 listener?.onAdLoaded()
             }
 
-            override fun onAdFailedToLoad(p0: Int) {
+            override fun onAdFailedToLoad(p0: LoadAdError?) {
                 super.onAdFailedToLoad(p0)
                 listener?.onError()
             }
