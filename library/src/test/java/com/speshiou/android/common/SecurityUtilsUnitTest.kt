@@ -1,5 +1,6 @@
 package com.speshiou.android.common
 
+import com.speshiou.android.common.security.SecurityUtils
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -9,9 +10,9 @@ import org.junit.Assert.*
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
-class ExampleUnitTest {
+class SecurityUtilsUnitTest {
     @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+    fun md5_isCorrect() {
+        assertEquals("3dfd6114db52c8e6130ba6642a7a2257", SecurityUtils.md5("android common library"))
     }
 }
