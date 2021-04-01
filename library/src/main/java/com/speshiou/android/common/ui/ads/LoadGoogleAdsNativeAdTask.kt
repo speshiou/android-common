@@ -17,7 +17,7 @@ import com.google.android.gms.ads.nativead.NativeAdOptions
 import com.google.android.gms.ads.nativead.NativeAdView
 import com.speshiou.android.common.R
 
-class LoadGoogleAdsNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewRecycler, adType: String, unitId: String, private vararg val bannerAdSizes: AdSize) : LoadAdTask(context, adViewRecycler, adType, unitId) {
+class LoadGoogleAdsNativeAdTask(context: Context, adViewRecycler: AdViewRecycler, adType: String, unitId: String, private vararg val bannerAdSizes: AdSize) : LoadAdTask(context, adViewRecycler, adType, unitId) {
 
     private var _adLoader: AdLoader? = null
     private var _nativeAd: NativeAd? = null
@@ -121,15 +121,15 @@ class LoadGoogleAdsNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewR
     public override fun attachAdView(adContainer: ViewGroup, index: Int) {
         super.attachAdView(adContainer, index)
 
-        val unifiedNativeAd = getUnifiedNativeAd(index)
+        val nativeAd = getNativeAd(index)
         val publisherAdView = _adManagerAdView
         var adView: View? = null
-        if (unifiedNativeAd != null) {
+        if (nativeAd != null) {
             adContainer.removeAllViews()
-            val unifiedNativeAdView = adViewRecycler.obtainAdView(context, AdViewType.AD_GMA_NATIVE) as? NativeAdView
-            if (unifiedNativeAdView != null) {
-                populateAdView(unifiedNativeAd, unifiedNativeAdView)
-                adView = unifiedNativeAdView
+            val nativeAdView = adViewRecycler.obtainAdView(context, AdViewType.AD_GMA_NATIVE) as? NativeAdView
+            if (nativeAdView != null) {
+                populateAdView(nativeAd, nativeAdView)
+                adView = nativeAdView
             }
         } else if (publisherAdView != null) {
             adView = publisherAdView
@@ -142,7 +142,7 @@ class LoadGoogleAdsNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewR
         }
     }
 
-    private fun getUnifiedNativeAd(index: Int): NativeAd? {
+    private fun getNativeAd(index: Int): NativeAd? {
         if (adType == AdType.AD_ADMOB_NATIVE) {
             if (index < _nativeAds.size && index >= 0) {
                 return _nativeAds[index]
@@ -153,8 +153,8 @@ class LoadGoogleAdsNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewR
         return null
     }
 
-    protected fun populateAdView(unifiedNativeAd: NativeAd,
-                                           adView: NativeAdView) {
+    protected fun populateAdView(nativeAd: NativeAd,
+                                 adView: NativeAdView) {
         adView.id = AdViewType.AD_GMA_NATIVE
         // Get the video controller for the ad. One will always be provided, even if the ad doesn't
         // have a video asset.
@@ -198,7 +198,7 @@ class LoadGoogleAdsNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewR
         })
 
         // Some assets are guaranteed to be in every NativeAppInstallAd.
-        val title = unifiedNativeAd.headline
+        val title = nativeAd.headline
         if (TextUtils.isEmpty(title)) {
             adView.headlineView?.visibility = View.GONE
         } else {
@@ -208,9 +208,9 @@ class LoadGoogleAdsNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewR
 //                adView.bodyView?.visibility = View.GONE
             }
         }
-        (adView.bodyView as? TextView)?.text = unifiedNativeAd.body
-        (adView.callToActionView as Button).text = unifiedNativeAd.callToAction
-        val icon = unifiedNativeAd.icon?.drawable
+        (adView.bodyView as? TextView)?.text = nativeAd.body
+        (adView.callToActionView as Button).text = nativeAd.callToAction
+        val icon = nativeAd.icon?.drawable
         if (icon == null) {
             adView.iconView?.visibility = View.GONE
         } else {
@@ -231,8 +231,8 @@ class LoadGoogleAdsNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewR
 
         // These assets aren't guaranteed to be in every NativeAppInstallAd, so it's important to
         // check before trying to display them.
-        var price = unifiedNativeAd.price
-        val store = unifiedNativeAd.store
+        var price = nativeAd.price
+        val store = nativeAd.store
         if (store == null) {
 //            adView.storeView?.visibility = View.INVISIBLE
         } else {
@@ -240,18 +240,18 @@ class LoadGoogleAdsNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewR
             (adView.storeView as? TextView)?.text = store
         }
 
-        if (unifiedNativeAd.starRating == null || unifiedNativeAd.starRating == 0.0) {
+        if (nativeAd.starRating == null || nativeAd.starRating == 0.0) {
 //            adView.starRatingView?.visibility = View.GONE
         } else {
-            if (unifiedNativeAd.starRating?.toFloat() == 0f) {
+            if (nativeAd.starRating?.toFloat() == 0f) {
 //                adView.starRatingView?.visibility = View.GONE
             } else {
-                (adView.starRatingView as? RatingBar)?.rating = unifiedNativeAd.starRating?.toFloat() ?: 0f
+                (adView.starRatingView as? RatingBar)?.rating = nativeAd.starRating?.toFloat() ?: 0f
                 adView.starRatingView?.visibility = View.VISIBLE
             }
         }
 
-        val extras = unifiedNativeAd.extras
+        val extras = nativeAd.extras
         if (extras != null) {
             if (extras.containsKey(FacebookAdapter.KEY_SOCIAL_CONTEXT_ASSET)) {
                 price = extras.getString(FacebookAdapter.KEY_SOCIAL_CONTEXT_ASSET)
@@ -272,7 +272,7 @@ class LoadGoogleAdsNativeAdUnifiedTask(context: Context, adViewRecycler: AdViewR
         }
 
         // Assign native ad object to the native view.
-        adView.setNativeAd(unifiedNativeAd)
+        adView.setNativeAd(nativeAd)
     }
 
     override fun recycle() {

@@ -16,7 +16,7 @@ class AdViewRecycler(private val mContext: Context) {
     var adViewWidth = -1
     var bannerAdSizes = arrayOf(AdSize.LARGE_BANNER)
     var keyword: String? = null
-    var gmaNativeAdLayoutResId = R.layout.admob_ad_unified
+    var gmaNativeAdLayoutResId = R.layout.admob_ad
     var fbNativeAdLayoutResId = R.layout.ad_fb_native
     var fbNativeBannerAdLayoutResId = R.layout.ad_fb_native_banner
 
@@ -33,11 +33,11 @@ class AdViewRecycler(private val mContext: Context) {
         } else if (adType == AdType.AD_FB_NATIVE_BANNER) {
             task = LoadFbNativeAdTask(mContext, this, adType, unitId)
         } else if (adType == AdType.AD_DFP || (adType == AdType.AD_DFP_BANNER && !bannerAdSizes.contains(AdSize.FLUID))) {
-            task = LoadGoogleAdsNativeAdUnifiedTask(mContext, this, adType, unitId, *bannerAdSizes)
+            task = LoadGoogleAdsNativeAdTask(mContext, this, adType, unitId, *bannerAdSizes)
         } else if (adType == AdType.AD_DFP || adType == AdType.AD_DFP_BANNER) {
             task = LoadDfpBannerTask(mContext, this, adType, unitId, adViewWidth, *bannerAdSizes)
         } else if (adType == AdType.AD_ADMOB_NATIVE) {
-            task = LoadGoogleAdsNativeAdUnifiedTask(mContext, this, adType, unitId)
+            task = LoadGoogleAdsNativeAdTask(mContext, this, adType, unitId)
         } else if (adType == AdType.AD_CSA) {
             task = LoadCSATask(mContext, this, adType, unitId, keyword)
         }
