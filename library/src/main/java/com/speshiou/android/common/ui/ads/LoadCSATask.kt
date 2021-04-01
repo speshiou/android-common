@@ -76,8 +76,12 @@ class LoadCSATask(context: Context, adViewRecycler: AdViewRecycler, adType: Stri
 
     public override fun attachAdView(adContainer: ViewGroup) {
         super.attachAdView(adContainer)
-        searchAdView?.let {
-            adContainer.addView(it)
+        val adView = searchAdView
+        if (adView != null) {
+            if (adView.parent != null && adView.parent is ViewGroup) {
+                (adView.parent as? ViewGroup)?.removeView(adView)
+            }
+            adContainer.addView(adView)
             val builder = DynamicHeightSearchAdRequest.Builder()
             builder.setQuery(keyword)
             builder.setChannel(channelId)
@@ -86,7 +90,7 @@ class LoadCSATask(context: Context, adViewRecycler: AdViewRecycler, adType: Stri
                 builder.setPage(page)
             }
             builder.setAdvancedOptionValue("csa_styleId", styleId)
-            it.loadAd(builder.build())
+            adView.loadAd(builder.build())
         }
     }
 }
