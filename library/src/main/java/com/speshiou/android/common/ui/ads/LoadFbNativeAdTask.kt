@@ -94,28 +94,30 @@ class LoadFbNativeAdTask(context: Context, adViewRecycler: AdViewRecycler, val f
 
         val viewHolder = adView.tag as AdViewHolder
 
-        viewHolder.viewAdTag.visibility = View.VISIBLE
+        viewHolder.viewAdTag?.visibility = View.VISIBLE
         val nativeAdIcon = adView.findViewById<AdIconView>(R.id.native_ad_icon)
         val nativeAdMedia = adView.findViewById<MediaView>(R.id.media)
         // Set the Text.
-        viewHolder.viewAdTag.text = ad.sponsoredTranslation
+        viewHolder.viewAdTag?.text = ad.sponsoredTranslation
         viewHolder.textViewTitle?.text = ad.advertiserName
         viewHolder.textViewSubtitle?.visibility = if (TextUtils.isEmpty(ad.adSocialContext)) View.GONE else View.VISIBLE
         viewHolder.textViewSubtitle?.text = ad.adSocialContext
         viewHolder.textViewBody?.visibility = if (TextUtils.isEmpty(ad.adBodyText)) View.GONE else View.VISIBLE
         viewHolder.textViewBody?.text = ad.adBodyText
-        viewHolder.buttonAction.visibility = if (ad.hasCallToAction()) View.VISIBLE else View.GONE
-        viewHolder.buttonAction.text = ad.adCallToAction
+        viewHolder.buttonAction?.visibility = if (ad.hasCallToAction()) View.VISIBLE else View.GONE
+        viewHolder.buttonAction?.text = ad.adCallToAction
 
         // Add the AdOptionsView
         val adOptionsView = AdOptionsView(context, ad, adView.findViewById(R.id.native_ad_layout))
-        viewHolder.adOptionsPlaceHolder.removeAllViews()
-        viewHolder.adOptionsPlaceHolder.addView(adOptionsView)
+        viewHolder.adOptionsPlaceHolder?.removeAllViews()
+        viewHolder.adOptionsPlaceHolder?.addView(adOptionsView)
 
         // Register the Title and CTA button to listen for clicks.
         val clickableViews = ArrayList<View>()
         clickableViews.add(adContainer)
-        clickableViews.add(viewHolder.buttonAction)
+        viewHolder.buttonAction?.let {
+            clickableViews.add(it)
+        }
         if (ad is NativeAd) {
             ad.registerViewForInteraction(adContainer, nativeAdMedia, nativeAdIcon, clickableViews)
         } else if (ad is NativeBannerAd) {

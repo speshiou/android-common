@@ -105,12 +105,10 @@ class AdViewRecycler(private val mContext: Context) {
             }
         }
         if (adView != null) {
-            val viewHolder = adView.tag as AdViewHolder
+            val viewHolder = adView.tag as? AdViewHolder
             if (viewHolder != null) {
                 viewHolder.resetViews()
-                if (viewHolder.buttonRemoveAd != null) {
-                    viewHolder.buttonRemoveAd.setOnClickListener(onClickRemoveAdButtonListener)
-                }
+                viewHolder.buttonRemoveAd?.setOnClickListener(onClickRemoveAdButtonListener)
             }
         }
         return adView
