@@ -1,5 +1,6 @@
 package com.speshiou.android.common.ui.ads
 
+import android.app.Activity
 import android.content.Context
 import com.facebook.ads.Ad
 import com.facebook.ads.AdError
@@ -48,8 +49,8 @@ class LoadFbInterstitialAdTask(context: Context, adType: String, adId: String): 
         interstitialAd?.loadAd()
     }
 
-    override fun show() {
-        super.show()
+    override fun show(activity: Activity) {
+        super.show(activity)
         interstitialAd?.show()
     }
 

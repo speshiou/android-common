@@ -1,5 +1,6 @@
 package com.speshiou.android.common.ui.ads
 
+import android.app.Activity
 import android.content.Context
 
 open class LoadInterstitialAdTask(val context: Context, val adType: String, val adId: String) {
@@ -18,7 +19,7 @@ open class LoadInterstitialAdTask(val context: Context, val adType: String, val 
 
     }
 
-    open fun show() {
+    open fun show(activity: Activity) {
 
     }
 

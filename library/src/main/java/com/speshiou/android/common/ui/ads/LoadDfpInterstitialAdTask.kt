@@ -1,58 +1,59 @@
 package com.speshiou.android.common.ui.ads
 
+import android.app.Activity
 import android.content.Context
-import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
-import com.google.android.gms.ads.doubleclick.PublisherAdRequest
-import com.google.android.gms.ads.doubleclick.PublisherInterstitialAd
+import com.google.android.gms.ads.admanager.AdManagerAdRequest
+import com.google.android.gms.ads.admanager.AdManagerInterstitialAd
+import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback
+import com.google.android.gms.ads.interstitial.InterstitialAd
 
 class LoadDfpInterstitialAdTask(context: Context, adType: String, adId: String): LoadInterstitialAdTask(context, adType, adId) {
-    private var interstitialAd: PublisherInterstitialAd? = null
+    private var interstitialAd: AdManagerInterstitialAd? = null
 
     override fun onLoad() {
         super.onLoad()
-        interstitialAd = PublisherInterstitialAd(context)
-        interstitialAd?.adUnitId = adId
-        interstitialAd?.adListener = object: AdListener() {
-
-            override fun onAdOpened() {
-                super.onAdOpened()
-                listener?.onAdDisplayed()
-
-                AdCompat.logImpressionEvent(adType, adId)
-            }
-
-            override fun onAdClosed() {
-                super.onAdClosed()
-                listener?.onAdDismissed()
-            }
-
-            override fun onAdClicked() {
-                super.onAdClicked()
-                listener?.onAdClicked()
-
-                AdCompat.logClickEvent(adType, adId)
-            }
-
-            override fun onAdLoaded() {
-                super.onAdLoaded()
+        AdManagerInterstitialAd.load(context, adId, AdManagerAdRequest.Builder().build(), object : AdManagerInterstitialAdLoadCallback() {
+            override fun onAdLoaded(adManagerInterstitialAd: AdManagerInterstitialAd) {
+                super.onAdLoaded(adManagerInterstitialAd)
+                interstitialAd = adManagerInterstitialAd
+                this@LoadDfpInterstitialAdTask.onAdLoaded(adManagerInterstitialAd)
                 listener?.onAdLoaded()
             }
 
-            override fun onAdFailedToLoad(p0: LoadAdError?) {
+            override fun onAdFailedToLoad(p0: LoadAdError) {
                 super.onAdFailedToLoad(p0)
                 listener?.onError()
             }
-        }
+        })
 
-        // For auto play video ads, it's recommended to load the ad
-        // at least 30 seconds before it is shown
-        interstitialAd?.loadAd(PublisherAdRequest.Builder().build())
     }
 
-    override fun show() {
-        super.show()
-        interstitialAd?.show()
+    private fun onAdLoaded(interstitialAd: InterstitialAd) {
+        interstitialAd.fullScreenContentCallback = object : FullScreenContentCallback() {
+
+            override fun onAdDismissedFullScreenContent() {
+                super.onAdDismissedFullScreenContent()
+                listener?.onAdDismissed()
+            }
+
+            override fun onAdFailedToShowFullScreenContent(p0: AdError) {
+                super.onAdFailedToShowFullScreenContent(p0)
+            }
+
+            override fun onAdShowedFullScreenContent() {
+                super.onAdShowedFullScreenContent()
+                listener?.onAdDisplayed()
+                this@LoadDfpInterstitialAdTask.interstitialAd = null
+            }
+        }
+    }
+
+    override fun show(activity: Activity) {
+        super.show(activity)
+        interstitialAd?.show(activity)
     }
 
     override fun destroy() {
@@ -64,6 +65,6 @@ class LoadDfpInterstitialAdTask(context: Context, adType: String, adId: String):
     }
 
     override fun isAdLoaded(): Boolean {
-        return interstitialAd?.isLoaded ?: false
+        return interstitialAd != null
     }
 }
