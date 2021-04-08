@@ -56,7 +56,7 @@ class AdsInstrumentedTest {
     @Test
     fun testAdMobNativeAdTask() {
         // dummy check for getting IdlingResource to work
-        onView(withId(R.id.ad_container)).check(matches(isDisplayed()))
+        onView(withId(R.id.ad_container)).check(matches(isEnabled()))
         onView(withId(R.id.ad_container)).check(matches(hasDescendant(withId(R.id.title))))
     }
 
