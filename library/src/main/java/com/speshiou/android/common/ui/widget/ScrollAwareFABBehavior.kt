@@ -20,7 +20,6 @@ class ScrollAwareFABBehavior(context: Context, attrs: AttributeSet) : FloatingAc
         super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, type)
         if (dyConsumed > 0) {
             val layoutParams = child.layoutParams as androidx.coordinatorlayout.widget.CoordinatorLayout.LayoutParams
-            Log.e("joey", "child.animation ${child.animation}")
             child.animate().translationY((layoutParams.bottomMargin + child.height).toFloat()).start()
         } else if (dyConsumed < 0) {
             child.animate().translationY(0f).start()

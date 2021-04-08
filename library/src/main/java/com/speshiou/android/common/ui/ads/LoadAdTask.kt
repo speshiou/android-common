@@ -3,6 +3,7 @@ package com.speshiou.android.common.ui.ads
 import android.content.Context
 import android.view.ViewGroup
 import android.text.TextUtils
+import com.google.android.gms.ads.AdRequest
 
 /**
  * Created by joey on 2017/9/12.
@@ -16,6 +17,8 @@ open class LoadAdTask(var context: Context, var adViewRecycler: AdViewRecycler, 
         private set
     private var mInitialized = false
     private var mLoadedTime: Long = 0
+    var listener: AdTaskListener? = null
+
     override fun run() {
         if (!mInitialized || isReadyForRefreshing || isFailedInLoadingAd) {
             mInitialized = true
@@ -34,6 +37,7 @@ open class LoadAdTask(var context: Context, var adViewRecycler: AdViewRecycler, 
     protected fun onLoaded() {
         isLoading = false
         isFailedInLoadingAd = false
+        listener?.onAdLoaded()
         if (mAdContainer != null && mAdContainer!!.tag != null && equals(mAdContainer!!.tag)) {
             adContainer = mAdContainer
         }
@@ -43,6 +47,7 @@ open class LoadAdTask(var context: Context, var adViewRecycler: AdViewRecycler, 
         isLoading = false
         isFailedInLoadingAd = true
         //            setAdContainer(mAdContainer);
+        listener?.onAdFailedToLoad(AdRequest.ERROR_CODE_NO_FILL)
     }
 
     fun markAsReadyForRefreshing() {

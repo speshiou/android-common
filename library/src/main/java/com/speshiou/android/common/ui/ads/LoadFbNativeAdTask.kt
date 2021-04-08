@@ -27,7 +27,6 @@ class LoadFbNativeAdTask(context: Context, adViewRecycler: AdViewRecycler, val f
             }
 
             override fun onError(ad: Ad, error: AdError) {
-                //                    Log.e("joey", "[fb] onError error=" + error.getErrorMessage());
                 if (mNativeAd != null && mNativeAd?.isAdLoaded == true) {
                     onLoaded()
                 } else {
