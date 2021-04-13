@@ -11,11 +11,9 @@ import kotlin.properties.Delegates
 
 class EmptyView(context: Context, attrs: AttributeSet): FrameLayout(context, attrs) {
 
-    private val binding: EmptyViewBinding
+    private val binding = EmptyViewBinding.inflate(LayoutInflater.from(context), this)
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.empty_view, this, true)
-        binding = EmptyViewBinding.inflate(LayoutInflater.from(context), this)
         binding.actionButton.visibility = View.GONE
 
         init(context, attrs)
