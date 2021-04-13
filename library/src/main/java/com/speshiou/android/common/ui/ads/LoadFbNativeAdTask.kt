@@ -20,7 +20,7 @@ class LoadFbNativeAdTask(context: Context, adViewRecycler: AdViewRecycler, val f
             AdType.AD_FB_NATIVE -> NativeAd(context, unitId)
             else -> NativeBannerAd(context, unitId)
         }
-        nativeAd.setAdListener(object : NativeAdListener {
+        val listener = object : NativeAdListener {
 
             override fun onMediaDownloaded(ad: Ad) {
 
@@ -57,10 +57,12 @@ class LoadFbNativeAdTask(context: Context, adViewRecycler: AdViewRecycler, val f
             override fun onLoggingImpression(ad: Ad) {
                 AdCompat.logImpressionEvent(adType, unitId)
             }
-        })
+        }
 
         // Request an ad
-        nativeAd.loadAd()
+        nativeAd.loadAd(nativeAd.buildLoadAdConfig()
+                .withAdListener(listener)
+                .build())
     }
 
     override fun detachAdView() {
@@ -94,7 +96,7 @@ class LoadFbNativeAdTask(context: Context, adViewRecycler: AdViewRecycler, val f
         val viewHolder = adView.tag as AdViewHolder
 
         viewHolder.viewAdTag?.visibility = View.VISIBLE
-        val nativeAdIcon = adView.findViewById<AdIconView>(R.id.native_ad_icon)
+        val nativeAdIcon = adView.findViewById<MediaView>(R.id.native_ad_icon)
         val nativeAdMedia = adView.findViewById<MediaView>(R.id.media)
         // Set the Text.
         viewHolder.viewAdTag?.text = ad.sponsoredTranslation

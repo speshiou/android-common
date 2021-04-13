@@ -13,8 +13,8 @@ class LoadFbInterstitialAdTask(context: Context, adType: String, adId: String): 
 
     override fun onLoad() {
         super.onLoad()
-        interstitialAd = InterstitialAd(context, adId)
-        interstitialAd?.setAdListener(object : InterstitialAdListener {
+        val interstitialAd = InterstitialAd(context, adId)
+        val listener = object : InterstitialAdListener {
             override fun onInterstitialDisplayed(ad: Ad) {
                 listener?.onAdDisplayed()
 
@@ -42,11 +42,15 @@ class LoadFbInterstitialAdTask(context: Context, adType: String, adId: String): 
             override fun onLoggingImpression(ad: Ad) {
                 // Ad impression logged callback
             }
-        })
+        }
+
+        this.interstitialAd = interstitialAd
 
         // For auto play video ads, it's recommended to load the ad
         // at least 30 seconds before it is shown
-        interstitialAd?.loadAd()
+        interstitialAd.loadAd(interstitialAd.buildLoadAdConfig()
+                .withAdListener(listener)
+                .build())
     }
 
     override fun show(activity: Activity) {

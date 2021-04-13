@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/margin_l"
         android:background="?android:attr/selectableItemBackground">
-        <com.facebook.ads.AdIconView
+        <com.facebook.ads.MediaView
             android:id="@+id/native_ad_icon"
             android:layout_width="48dp"
             android:layout_height="48dp"
