@@ -20,7 +20,8 @@ class LoadAFSNativeAdTask(context: Context, adViewRecycler: AdViewRecycler, adTy
     public override fun onLoad() {
         super.onLoad()
 
-        if (TextUtils.isEmpty(keyword)) {
+        val keyword = keyword
+        if (keyword == null || TextUtils.isEmpty(keyword)) {
             onFailedToLoad()
             return
         }
