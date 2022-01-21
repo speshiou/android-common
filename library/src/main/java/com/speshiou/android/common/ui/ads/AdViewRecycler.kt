@@ -58,9 +58,6 @@ class AdViewRecycler(private val mContext: Context) {
         if (reusedTask is LoadCSATask) {
             reusedTask.keyword = keyword
         }
-        if (reusedTask is LoadAFSNativeAdTask) {
-            reusedTask.keyword = keyword
-        }
         return reusedTask
     }
 
