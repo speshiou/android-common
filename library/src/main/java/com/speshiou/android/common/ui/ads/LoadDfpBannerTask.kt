@@ -23,7 +23,7 @@ class LoadDfpBannerTask(context: Context, adViewRecycler: AdViewRecycler, adType
         publisherAdView.adUnitId = unitId
 
         publisherAdView.adListener = object : com.google.android.gms.ads.AdListener() {
-            override fun onAdFailedToLoad(p0: LoadAdError?) {
+            override fun onAdFailedToLoad(p0: LoadAdError) {
                 super.onAdFailedToLoad(p0)
                 if (_adManagerAdView != null) {
                     onLoaded()

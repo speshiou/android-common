@@ -29,7 +29,6 @@ class LoadCSATask(context: Context, adViewRecycler: AdViewRecycler, adType: Stri
 
         if (searchAdView == null) {
             searchAdView = SearchAdView(context)
-            searchAdView?.adSize = AdSize.SEARCH
             val unitIds = unitId.split("/")
             clientId = unitIds[0]
             channelId = unitIds[1]
@@ -38,7 +37,7 @@ class LoadCSATask(context: Context, adViewRecycler: AdViewRecycler, adType: Stri
 
             searchAdView?.adListener = object : com.google.android.gms.ads.AdListener() {
 
-                override fun onAdFailedToLoad(p0: LoadAdError?) {
+                override fun onAdFailedToLoad(p0: LoadAdError) {
                     super.onAdFailedToLoad(p0)
 //                if (mSearchAdView != null) {
 //                    onLoaded()
@@ -83,7 +82,9 @@ class LoadCSATask(context: Context, adViewRecycler: AdViewRecycler, adType: Stri
             }
             adContainer.addView(adView)
             val builder = DynamicHeightSearchAdRequest.Builder()
-            builder.setQuery(keyword)
+            keyword?.let {
+                builder.setQuery(it)
+            }
             builder.setChannel(channelId)
             builder.setNumber(1)
             if (page > 0) {

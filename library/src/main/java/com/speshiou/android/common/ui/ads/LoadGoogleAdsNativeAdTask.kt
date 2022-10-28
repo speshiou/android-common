@@ -59,7 +59,7 @@ class LoadGoogleAdsNativeAdTask(context: Context, adViewRecycler: AdViewRecycler
                         AdCompat.logClickEvent(adType, unitId)
                     }
 
-                    override fun onAdFailedToLoad(p0: LoadAdError?) {
+                    override fun onAdFailedToLoad(p0: LoadAdError) {
                         super.onAdFailedToLoad(p0)
                         if (_nativeAd != null || _adManagerAdView != null) {
                             onLoaded()
